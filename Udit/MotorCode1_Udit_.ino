@@ -68,15 +68,15 @@ void loop()
     if (level > 0)
     {
       analogWrite(LedL, abs(X));
-      analogWrite(LedR, abs(255 - Y));
+      analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
       Serial.print("Oct-1\n");
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(255 - X));
-      analogWrite(LedR, abs(Y));
+      analogWrite(LedL, abs(X));
+      analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
       Serial.print("Oct-2\n");
@@ -94,7 +94,7 @@ void loop()
     }
     if (level > 0)
     {
-      analogWrite(LedL, abs(255 + X));
+      analogWrite(LedL, abs(Y+X));
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
@@ -102,8 +102,8 @@ void loop()
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(X));
-      analogWrite(LedR, abs(255 - Y));
+      analogWrite(LedL, abs(X+Y));
+      analogWrite(LedR, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
       Serial.print("Oct-4\n");
@@ -121,7 +121,7 @@ void loop()
     }
     if (level > 0)
     {
-      analogWrite(LedL, abs(255 + X));
+      analogWrite(LedL, abs(X-Y));
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
@@ -129,7 +129,7 @@ void loop()
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(255 + Y));
+      analogWrite(LedL, abs(X-Y));
       analogWrite(LedR, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
@@ -150,7 +150,7 @@ void loop()
     if (level > 0)
     {
       analogWrite(LedL, abs(X));
-      analogWrite(LedR, abs(255 - Y));
+      analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
       Serial.print("Oct-8\n");
@@ -158,7 +158,7 @@ void loop()
     if (level < 0)
     {
       analogWrite(LedL, abs(Y));
-      analogWrite(LedR, abs(255 - X));
+      analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
       Serial.print("Oct-7\n");
