@@ -4,14 +4,14 @@ precision = 0.0000001
 current_x = 3
 change_in_x = 1
 learning_rate = 0.01
-def part_deriv(x):
+def part_deriv(x):      #the function whose minimum needs to be found out = (x +5)^2
     return(2*(x + 5))
 while change_in_x > precision and iterations < max_iterions:
     previous_x = current_x
     current_x = current_x - learning_rate * part_deriv(previous_x)
-    change_in_x = abs(previous_x - current_x)
+    change_in_x = abs(previous_x - current_x)  #abs = absolute value
     iterations = iterations + 1
-    print("X is : ",current_x," at iteration no. ",iteratons)
+    print("X is : ",current_x," at iteration no. ",iterations)
 
     
 
