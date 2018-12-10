@@ -1,5 +1,6 @@
 /*code for matrix
  * matrix : A[y][x]
+ matrix corresponds only to the second quadrant so far
  */
  struct node
  {
