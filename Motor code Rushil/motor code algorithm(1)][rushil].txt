@@ -1,0 +1,16 @@
+Algorith for motor code:
+Create matrices of the form A[y][x] to use as a map of the quadrants in the cartesian plane
+in the matrix, there are three conditions:
+	if the cell is on the diagonal line(primary or secondary depends on the quadrant being represented ), one 
+	of the motors will not rotate, similarly, we have cases in cells below and above the diagonal line with respect to 
+	the motor direction
+each of the cells has a value mapped to it corresponding to what the bot would move like including direction of the right
+and left side motors, and the values of their speeds
+make matrices for all the four quadrants // still working on otpimizing this so as to save a lot of memory and generalise
+						//one matrix to be applicable for all quadrants
+/*executable code*/
+read the joystick values 
+go to the cell in the quadrant corresponding to the joystick value
+from the cell, analogWrite the speed values to the respective motors and digitalWrite the direction for the motors
+repeat the executable code 
+
