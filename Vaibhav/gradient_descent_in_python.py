@@ -1,19 +1,17 @@
-max_iters = 1000
-iters = 0
+max_iterations = 1000
+iterations = 0
 precision = 0.0000001
-cur_x = 3
+current_x = 3
 change_in_x = 1
 learning_rate = 0.01
 def part_deriv(x):
     return(2*(x + 5))
-while change_in_x > precision and iters < max_iters:
-    prev_x = cur_x
-    cur_x = cur_x - learning_rate * part_deriv(prev_x)
-    change_in_x = abs(prev_x - cur_x)
-    iters = iters + 1
-    print("X is : ",cur_x," at iteration no. ",iters)
+while change_in_x > precision and iterations < max_iterions:
+    previous_x = current_x
+    current_x = current_x - learning_rate * part_deriv(previous_x)
+    change_in_x = abs(previous_x - current_x)
+    iterations = iterations + 1
+    print("X is : ",current_x," at iteration no. ",iteratons)
 
-accuracy = (cur_x/-5) * 100;
-print(accuracy)
     
 
