@@ -1,4 +1,3 @@
-#this uses self written gradient descent to find the parameter values
 import numpy as np
 import scipy.io as sio
 import matplotlib.pyplot as plt
@@ -17,7 +16,7 @@ def cost(X, theta, y, m, b):
 
 def gradient(X, theta, y, m, b):
    gb = (alpha/m)*(np.sum(h(X, theta, b) - y))
-   g = (alpha/m)*(np.sum(((h(X, theta, b) - y)*X), axis=0)) - (lamb/m)*theta
+   g = (alpha/m)*(np.sum(((h(X, theta, b) - y)*X), axis=0)) + (lamb/m)*theta
    return gb, g
 
 def gradientDescent(X, theta, y, m, b, iter_num): #iter_num just for making the program verbose
