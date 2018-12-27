@@ -191,4 +191,8 @@ analogWrite(enA,motorSpeedA);
 analogWrite(enB,motorSpeedB);
 analogWrite(enC,motorSpeedC);
 analogWrite(enD,motorSpeedD);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> ef4f4d0cddc39351adb284c7821918ce8865e6a5
