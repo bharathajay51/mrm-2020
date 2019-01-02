@@ -1,29 +1,28 @@
-#this uses self written gradient descent to find the parameter values
 import numpy as np
 import scipy.io as sio
 import matplotlib.pyplot as plt
 
 lamb = 3
-alpha = 0.1
+alpha = 0.01
 
 def sigmoid(z):
-    return 1/(1+np.exp(-z))
+    return 1./(1+np.exp(-z))
 
 def h(X, theta, b):
     return sigmoid(np.sum(theta*X, axis=1)[:, np.newaxis] + b)
 
 def cost(X, theta, y, m, b):
-    return (-1/m)*(np.sum((1-y)*np.log(1-h(X, theta, b)))+ np.sum(y*np.log(h(X, theta, b)))) + (lamb/(2*m))*(np.sum(theta**2))
+    return (-1./m)*(np.sum((1-y)*np.log(1-h(X, theta, b))) + np.sum(y*np.log(h(X, theta, b)))) + (float(lamb)/(2*m))*(np.sum(theta**2))
 
 def gradient(X, theta, y, m, b):
    gb = (alpha/m)*(np.sum(h(X, theta, b) - y))
-   g = (alpha/m)*(np.sum(((h(X, theta, b) - y)*X), axis=0)) - (lamb/m)*theta
+   g = (alpha/m)*(np.sum(((h(X, theta, b) - y)*X), axis=0)) + (lamb/m)*theta
    return gb, g
 
 def gradientDescent(X, theta, y, m, b, iter_num): #iter_num just for making the program verbose
     last = cost(X, theta, y, m, b)
-    iteration = 10000
-    precision = 0.000001
+    iteration = 50
+    precision = 1e-4
     while True:
         last = cost(X, theta, y, m, b)
         gradb, grad = gradient(X, theta, y, m, b)
