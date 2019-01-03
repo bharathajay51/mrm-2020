@@ -2,8 +2,8 @@ int LedL = 5;
 int LedR = 6;
 int LedRevL = 4;
 int LedRevR = 7;
-int joy1 = A0;
-int joy2 = A1;
+int joy1 = A1;
+int joy2 = A0;
 int joylevel1;
 int joylevel2;
 int joylevelFirst;
@@ -12,6 +12,7 @@ int k1;
 int k2;
 int X;
 int Y;
+int g=0;
 
 
 boolean flag = 1;
@@ -60,10 +61,11 @@ void loop()
     int level = X - Y;
     if (level == 0)
     { analogWrite(LedL, abs(X));
-      analogWrite(LedR, 0);
+      analogWrite(LedR, g);
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-1\n");
+      Serial.println(X);
+      Serial.println(g);
     }
     if (level > 0)
     {
@@ -71,7 +73,8 @@ void loop()
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-1\n");
+      Serial.println(X);
+      Serial.println(X-Y);
     }
     if (level < 0)
     {
@@ -79,7 +82,8 @@ void loop()
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-2\n");
+      Serial.println(X);
+      Serial.println(X-Y);
     }
   }
   if (X <= 0 && Y >= 0)
@@ -90,7 +94,8 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-2\n");
+      Serial.println(g);
+      Serial.println(Y);
     }
     if (level > 0)
     {
@@ -98,7 +103,8 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-3\n");
+      Serial.println(Y+X);
+      Serial.println(Y);
     }
     if (level < 0)
     {
@@ -106,7 +112,8 @@ void loop()
       analogWrite(LedR, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-4\n");
+      Serial.println(X+Y);
+      Serial.println(X);
     }
   }
   if (X < 0 && Y < 0)
@@ -117,7 +124,8 @@ void loop()
       analogWrite(LedR, 0);
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-3");
+      Serial.println(X);
+      Serial.println(g);
     }
     if (level > 0)
     {
@@ -125,7 +133,8 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-6\n");
+      Serial.println(X-Y);
+      Serial.println(Y);
     }
     if (level < 0)
     {
@@ -133,7 +142,8 @@ void loop()
       analogWrite(LedR, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-5\n");
+      Serial.println(X-Y);
+      Serial.println(X);
     }
   }
 
@@ -145,7 +155,8 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("diag-4\n");
+      Serial.println(g);
+      Serial.println(Y);
     }
     if (level > 0)
     {
@@ -153,7 +164,9 @@ void loop()
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-8\n");
+      Serial.println(X);
+      Serial.println(X-Y);
+      
     }
     if (level < 0)
     {
@@ -161,9 +174,10 @@ void loop()
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-7\n");
+      Serial.println(Y);
+      Serial.println(X-Y);
     }
   }
 
-  delay(100);
+  delay(200);
 }
