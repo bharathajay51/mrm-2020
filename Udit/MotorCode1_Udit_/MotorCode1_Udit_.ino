@@ -12,6 +12,7 @@ int k1;
 int k2;
 int X;
 int Y;
+int g=0;
 
 
 boolean flag = 1;
@@ -43,27 +44,31 @@ void loop()
   //Serial.println(joylevel1);
   k1 = joylevel1 - 512 - joylevelFirst;
   k2 = joylevel2 - 512 - joylevelSecond;
-  X = -(k1 / 2);
+  X = (k1 / 2);
   if (X > 255)
   {
     X = 255;
   }
-  Serial.print("X val: "); Serial.println(X);
+  //Serial.print("X val: "); Serial.println(X);
   Y = k2 / 2;
   if (Y > 255)
   {
     Y = 255;
   }
-  Serial.print("Y val: "); Serial.println(Y);
+  //Serial.print("Y val: "); Serial.println(Y);
   if (X >= 0 && Y >= 0)
   {
     int level = X - Y;
     if (level == 0)
     { analogWrite(LedL, abs(X));
-      analogWrite(LedR, 0);
+      analogWrite(LedR, g);
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-1\n");
+      Serial.println("L :");   Serial.print(X);
+    
+      Serial.print("\t R:");  Serial.print(g);
+     
+           Serial.print("\n");
     }
     if (level > 0)
     {
@@ -71,15 +76,23 @@ void loop()
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-1\n");
+     Serial.println("L");
+      Serial.print(X);
+      Serial.print("\t R");;
+      Serial.print(-(X-Y));
+           Serial.print("\n");
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(X));
+      analogWrite(LedL, abs(Y));
       analogWrite(LedR, abs(X-Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-2\n");
+     Serial.println("L");
+      Serial.print(Y);
+      Serial.print("\t R");;
+      Serial.print(-(X-Y));
+           Serial.print("\n");
     }
   }
   if (X <= 0 && Y >= 0)
@@ -90,7 +103,11 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-2\n");
+     Serial.println("L");
+      Serial.print(g);
+      Serial.print("\t R");;
+      Serial.print(Y);
+           Serial.print("\n");
     }
     if (level > 0)
     {
@@ -98,7 +115,11 @@ void loop()
       analogWrite(LedR, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-3\n");
+     Serial.println("L");
+      Serial.print(Y+X);
+      Serial.print("\t R");;
+      Serial.print(Y);
+           Serial.print("\n");
     }
     if (level < 0)
     {
@@ -106,64 +127,94 @@ void loop()
       analogWrite(LedR, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-4\n");
+      Serial.println("L");
+      Serial.print(X+Y);
+      Serial.print("\t R");
+      Serial.print(-X);
+           Serial.print("\n");
     }
   }
-  if (X < 0 && Y < 0)
+  if (X <=0 && Y <=0)
   {
     int level = X - Y;
     if (level == 0)
-    { analogWrite(LedL, abs(X));
-      analogWrite(LedR, 0);
+    { analogWrite(LedR, abs(X));
+      analogWrite(LedL, 0);
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("diag-3");
+     Serial.println("L");
+      Serial.print(0);
+      Serial.print("\t R ");
+      Serial.print(X);
+           Serial.print("\n");
     }
     if (level > 0)
     {
-      analogWrite(LedL, abs(X-Y));
-      analogWrite(LedR, abs(Y));
+      analogWrite(LedR, abs(X-Y));
+      analogWrite(LedL, abs(Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-6\n");
+      Serial.println("L");
+      Serial.print(Y);
+      Serial.print("\t R");
+      Serial.print((X-Y));
+           Serial.print("\n");
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(X-Y));
-      analogWrite(LedR, abs(X));
+      analogWrite(LedR, abs(X-Y));
+      analogWrite(LedL, abs(X));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, LOW);
-      Serial.print("Oct-5\n");
+      Serial.println("L");
+      Serial.print(X);
+      Serial.print("\t R");
+      Serial.print(-(X-Y));
+           Serial.print("\n");
     }
   }
 
-  if (X > 0 && Y < 0)
+  if (X >= 0 && Y <= 0)
   {
     int level = X + Y;
     if (level == 0)
-    { analogWrite(LedL, 0);
-      analogWrite(LedR, abs(Y));
+    { analogWrite(LedR, 0);
+      analogWrite(LedL, abs(Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("diag-4\n");
+     Serial.println("L");
+      Serial.print(Y);
+      Serial.print("\t R");
+      Serial.print(g);
+      Serial.print("\n");
     }
     if (level > 0)
     {
-      analogWrite(LedL, abs(X));
-      analogWrite(LedR, abs(X-Y));
+      analogWrite(LedR, abs(X));
+      analogWrite(LedL, abs(X+Y));
       digitalWrite(LedRevL, LOW);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-8\n");
+      Serial.println("L");
+      Serial.print((X+Y));
+      Serial.print("\t R");
+      Serial.print(-X);
+      Serial.print("\n");
+      
     }
     if (level < 0)
     {
-      analogWrite(LedL, abs(Y));
-      analogWrite(LedR, abs(X-Y));
+      analogWrite(LedR, abs(Y));
+      analogWrite(LedL, abs(X+Y));
       digitalWrite(LedRevL, HIGH);
       digitalWrite(LedRevR, HIGH);
-      Serial.print("Oct-7\n");
+      Serial.println("L");
+      Serial.print(X+Y);
+      Serial.print("\t R");
+      Serial.print(Y);
+      Serial.print("\n");
     }
   }
-
   delay(100);
+
+  
 }

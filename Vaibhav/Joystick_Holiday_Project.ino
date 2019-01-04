@@ -25,11 +25,13 @@ pinMode(left2_bkwd,OUTPUT);
 pinMode(enD,OUTPUT);
 pinMode(right2_fwd,OUTPUT);
 pinMode(right2_bkwd,OUTPUT);
+Serial.begin(9600);
 }
 
-void loop() {
 int xAxis = analogRead(A0);
 int yAxis = analogRead(A1);
+
+void loop() {
 
 int motorSpeedA = 0;
 int motorSpeedB = 0;
@@ -39,7 +41,7 @@ int spA = 0;
 int spB = 0;
 int spC = 0;
 int spD = 0;
-
+/*
 int leftForward(int S_A,int S_C)
 {
   digitalWrite(left1_fwd,HIGH);
@@ -68,6 +70,7 @@ int rightBackward(int S_B,int S_D)
   S_B = map(yAxis,512,0,0,255);
   S_D = map(yAxis,512,0,0,255);
 }
+*/
 
 //FIRST OCTANT
 if(xAxis > 0 and xAxis < 512 and yAxis > 1023 - xAxis and yAxis > 512 and yAxis < 1023)
@@ -157,6 +160,12 @@ else if(xAxis == 512 and yAxis == 512)
   motorSpeedC = 0;
   motorSpeedD = 0;
 }
+Serial.println("X AXIS : ");
+Serial.print(xAxis);
+delay(200);
+Serial.println("Y AXIS : ");
+Serial.print(yAxis);
+delay(200);
 /*
 void leftForward(int S_A,int S_C)
 {
@@ -164,6 +173,7 @@ void leftForward(int S_A,int S_C)
   digitalWrite(left2_fwd,HIGH);
   S_A = map(yAxis,512,1023,0,255);
   S_C = map(yAxis,512,1023,0,255);
+
 }
 void leftBackward(int S_A,int S_C)
 {
@@ -171,6 +181,7 @@ void leftBackward(int S_A,int S_C)
   digitalWrite(left2_bkwd,HIGH);
   S_A = map(yAxis,512,0,0,255);
   S_C = map(yAxis,512,0,0,255);
+ 
 }
 void rightForward(int S_B,int S_D)
 {
@@ -178,6 +189,7 @@ void rightForward(int S_B,int S_D)
   digitalWrite(right2_fwd,HIGH);
  S_B = map(yAxis,512,1023,0,255);
  S_D = map(yAxis,512,1023,0,255);
+ 
 }
 void rightBackward(int S_B,int S_D)
 {
@@ -185,14 +197,47 @@ void rightBackward(int S_B,int S_D)
   digitalWrite(right2_bkwd,HIGH);
   S_B = map(yAxis,512,0,0,255);
   S_D = map(yAxis,512,0,0,255);
+  
 }
 */
 analogWrite(enA,motorSpeedA);
+Serial.println("L :");
+Serial.print(motorSpeedA);
 analogWrite(enB,motorSpeedB);
+Serial.println("R :");
+Serial.print(motorSpeedB);
 analogWrite(enC,motorSpeedC);
 analogWrite(enD,motorSpeedD);
-<<<<<<< HEAD
 }
-=======
+void leftForward(int S_A,int S_C)
+{
+  digitalWrite(left1_fwd,HIGH);
+  digitalWrite(left2_fwd,HIGH);
+  S_A = map(yAxis,512,1023,0,255);
+  S_C = map(yAxis,512,1023,0,255);
+
 }
->>>>>>> ef4f4d0cddc39351adb284c7821918ce8865e6a5
+void leftBackward(int S_A,int S_C)
+{
+  digitalWrite(left1_bkwd,HIGH);
+  digitalWrite(left2_bkwd,HIGH);
+  S_A = map(yAxis,512,0,0,255);
+  S_C = map(yAxis,512,0,0,255);
+ 
+}
+void rightForward(int S_B,int S_D)
+{
+  digitalWrite(right1_fwd,HIGH);
+  digitalWrite(right2_fwd,HIGH);
+ S_B = map(yAxis,512,1023,0,255);
+ S_D = map(yAxis,512,1023,0,255);
+ 
+}
+void rightBackward(int S_B,int S_D)
+{
+  digitalWrite(right1_bkwd,HIGH);
+  digitalWrite(right2_bkwd,HIGH);
+  S_B = map(yAxis,512,0,0,255);
+  S_D = map(yAxis,512,0,0,255);
+  
+}
