@@ -107,24 +107,28 @@ Serial.println(rm);
 
 if(dirleft==1)
 {
-  analogWrite(11,lm);
   analogWrite(10,0);
+  analogWrite(11,lm);
+  
 }
 else
 {
-  analogWrite(10,lm);
   analogWrite(11,0);
+  analogWrite(10,lm);
+  
 }
 
 if(dirright==1)
 {
-  analogWrite(6,rm);
   analogWrite(5,0);
+  analogWrite(6,rm);
+  
 }
 else
 {
-  analogWrite(5,rm);
   analogWrite(6,0);
+  analogWrite(5,rm);
+  
 }
 
 
