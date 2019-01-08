@@ -12,6 +12,17 @@ int right2_fwd = 12;
 int right2_bkwd = 13;
 int xAxis = analogRead(A0);
 int yAxis = analogRead(A1);
+
+int motorSpeedA = 0;
+int motorSpeedB = 0;
+int motorSpeedC = 0;
+int motorSpeedD = 0;
+
+int x1 = map(xAxis,512,1023,0,255);
+int x2 = map(xAxis,512,0,0,255);
+int y1 = map(yAxis,512,1023,0,255);
+int y2 = map(yAxis,512,0,0,255);
+
 void setup()
 {
 pinMode(xAxis,INPUT);
@@ -31,6 +42,7 @@ pinMode(right2_bkwd,OUTPUT);
 Serial.begin(9600);
 }
 
+/*
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 int motorSpeedC = 0;
@@ -41,7 +53,7 @@ int x2 = map(xAxis,512,0,0,255);
 int y1 = map(yAxis,512,1023,0,255);
 int y2 = map(yAxis,512,0,0,255);
 
-
+*/
 void my_func()
 {
   if(yAxis == 512 and xAxis == 512)
