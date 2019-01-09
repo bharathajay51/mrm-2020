@@ -1,0 +1,741 @@
+
+MotorCode.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000039e  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000412  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000006  00800060  00800060  00000412  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000412  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000444  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000030  00000000  00000000  00000480  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000006dc  00000000  00000000  000004b0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 000005c4  00000000  00000000  00000b8c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000441  00000000  00000000  00001150  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000060  00000000  00000000  00001594  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000334  00000000  00000000  000015f4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000294  00000000  00000000  00001928  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000050  00000000  00000000  00001bbc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 a1 01 	jmp	0x342	; 0x342 <__vector_14>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a6 36       	cpi	r26, 0x66	; 102
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 48 00 	call	0x90	; 0x90 <main>
+  74:	0c 94 cd 01 	jmp	0x39a	; 0x39a <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <ADCsetup.1765>:
+	TCCR0|= (1<<WGM00)| (1<<WGM01)|(1<<COM01)|(1<<CS00) ; // PWM setting for pinb3, timer 0 
+	TCCR2|= (1<<WGM20)|(1<<WGM21) | (1<<COM21)| (1<<CS20) ; // PWM setting for pind7 timer 
+//*************************setting up ADC*********************************	
+	void ADCsetup()
+	{
+		ADCSRA|=(1<<ADPS2)| (0<<ADPS1) | (0<<ADPS0);
+  7c:	32 9a       	sbi	0x06, 2	; 6
+	    ADMUX|=(1<<ADLAR)|(1<<REFS0);
+  7e:	87 b1       	in	r24, 0x07	; 7
+  80:	80 66       	ori	r24, 0x60	; 96
+  82:	87 b9       	out	0x07, r24	; 7
+	    ADCSRA|=(1<<ADIE)|(1<<ADEN);
+  84:	86 b1       	in	r24, 0x06	; 6
+  86:	88 68       	ori	r24, 0x88	; 136
+  88:	86 b9       	out	0x06, r24	; 6
+	    sei();
+  8a:	78 94       	sei
+	    ADCSRA|= (1<<ADSC);
+  8c:	36 9a       	sbi	0x06, 6	; 6
+  8e:	08 95       	ret
+
+00000090 <main>:
+
+
+
+int main(void)
+{
+    DDRB|= (1<<PINB3);
+  90:	bb 9a       	sbi	0x17, 3	; 23
+	DDRD|=(1<<PIND7);
+  92:	8f 9a       	sbi	0x11, 7	; 17
+	DDRB|=(1<<PINB0);
+  94:	b8 9a       	sbi	0x17, 0	; 23
+	DDRB|=(1<<PINB1);
+  96:	b9 9a       	sbi	0x17, 1	; 23
+	
+	TCCR0|= (1<<WGM00)| (1<<WGM01)|(1<<COM01)|(1<<CS00) ; // PWM setting for pinb3, timer 0 
+  98:	83 b7       	in	r24, 0x33	; 51
+  9a:	89 66       	ori	r24, 0x69	; 105
+  9c:	83 bf       	out	0x33, r24	; 51
+	TCCR2|= (1<<WGM20)|(1<<WGM21) | (1<<COM21)| (1<<CS20) ; // PWM setting for pind7 timer 
+  9e:	85 b5       	in	r24, 0x25	; 37
+  a0:	89 66       	ori	r24, 0x69	; 105
+  a2:	85 bd       	out	0x25, r24	; 37
+		
+		int X=(joylevel1-512)/2;
+		int Y=(joylevel2-512)/2;
+		if (X < 10 && X > -10)
+		{
+			X = 0;
+  a4:	d0 e0       	ldi	r29, 0x00	; 0
+  a6:	c0 e0       	ldi	r28, 0x00	; 0
+				}
+				if (level < 0)
+				{  
+					OCR0=abs(X);
+					OCR2=abs(X-Y);
+					PORTB=(1<<PINB0)|(0<<PINB1);
+  a8:	01 e0       	ldi	r16, 0x01	; 1
+				if (level > 0)
+				{
+					
+					OCR0=abs(Y);
+					OCR2=abs(X-Y);
+					PORTB=(1<<PINB0)|(1<<PINB1);
+  aa:	0f 2e       	mov	r0, r31
+  ac:	f3 e0       	ldi	r31, 0x03	; 3
+  ae:	ff 2e       	mov	r15, r31
+  b0:	f0 2d       	mov	r31, r0
+			}
+			if (level > 0)
+			{
+			   OCR0=abs(X+Y);
+			   OCR2=abs(X);
+			   PORTB=(0<<PINB0)|(1<<PINB1);
+  b2:	12 e0       	ldi	r17, 0x02	; 2
+		
+	}
+	
+    while (1) 
+    {    
+		ADCsetup(); // for joylevel1
+  b4:	0e 94 3e 00 	call	0x7c	; 0x7c <ADCsetup.1765>
+		ADCsetup();//  for joylevel2 
+  b8:	0e 94 3e 00 	call	0x7c	; 0x7c <ADCsetup.1765>
+		
+		  // start ADC
+	//**********************getting input from joystick************
+		
+		int X=(joylevel1-512)/2;
+  bc:	20 91 64 00 	lds	r18, 0x0064	; 0x800064 <joylevel1>
+  c0:	30 91 65 00 	lds	r19, 0x0065	; 0x800065 <joylevel1+0x1>
+  c4:	32 50       	subi	r19, 0x02	; 2
+  c6:	c9 01       	movw	r24, r18
+  c8:	99 23       	and	r25, r25
+  ca:	0c f4       	brge	.+2      	; 0xce <main+0x3e>
+  cc:	01 96       	adiw	r24, 0x01	; 1
+  ce:	95 95       	asr	r25
+  d0:	87 95       	ror	r24
+		int Y=(joylevel2-512)/2;
+  d2:	40 91 60 00 	lds	r20, 0x0060	; 0x800060 <_edata>
+  d6:	50 91 61 00 	lds	r21, 0x0061	; 0x800061 <_edata+0x1>
+  da:	52 50       	subi	r21, 0x02	; 2
+  dc:	9a 01       	movw	r18, r20
+  de:	55 23       	and	r21, r21
+  e0:	14 f4       	brge	.+4      	; 0xe6 <main+0x56>
+  e2:	2f 5f       	subi	r18, 0xFF	; 255
+  e4:	3f 4f       	sbci	r19, 0xFF	; 255
+  e6:	35 95       	asr	r19
+  e8:	27 95       	ror	r18
+		if (X < 10 && X > -10)
+  ea:	ac 01       	movw	r20, r24
+  ec:	47 5f       	subi	r20, 0xF7	; 247
+  ee:	5f 4f       	sbci	r21, 0xFF	; 255
+  f0:	43 31       	cpi	r20, 0x13	; 19
+  f2:	51 05       	cpc	r21, r1
+  f4:	08 f4       	brcc	.+2      	; 0xf8 <main+0x68>
+  f6:	18 c1       	rjmp	.+560    	; 0x328 <main+0x298>
+		{
+			X = 0;
+		}
+		if (Y < 10 && Y > -10)
+  f8:	a9 01       	movw	r20, r18
+  fa:	47 5f       	subi	r20, 0xF7	; 247
+  fc:	5f 4f       	sbci	r21, 0xFF	; 255
+  fe:	43 31       	cpi	r20, 0x13	; 19
+ 100:	51 05       	cpc	r21, r1
+ 102:	08 f4       	brcc	.+2      	; 0x106 <main+0x76>
+ 104:	fd c0       	rjmp	.+506    	; 0x300 <main+0x270>
+		{
+			Y = 0;
+		}
+//*******************starting mapping*************************
+
+		  if (X >= 0 && Y >= 0)          // First quadrant
+ 106:	99 23       	and	r25, r25
+ 108:	0c f4       	brge	.+2      	; 0x10c <main+0x7c>
+ 10a:	43 c0       	rjmp	.+134    	; 0x192 <main+0x102>
+ 10c:	33 23       	and	r19, r19
+ 10e:	0c f4       	brge	.+2      	; 0x112 <main+0x82>
+ 110:	13 c1       	rjmp	.+550    	; 0x338 <main+0x2a8>
+ 112:	07 c0       	rjmp	.+14     	; 0x122 <main+0x92>
+		{
+			X = 0;
+		}
+		if (Y < 10 && Y > -10)
+		{
+			Y = 0;
+ 114:	2d 2f       	mov	r18, r29
+ 116:	3c 2f       	mov	r19, r28
+ 118:	04 c0       	rjmp	.+8      	; 0x122 <main+0x92>
+		
+		int X=(joylevel1-512)/2;
+		int Y=(joylevel2-512)/2;
+		if (X < 10 && X > -10)
+		{
+			X = 0;
+ 11a:	8d 2f       	mov	r24, r29
+ 11c:	9c 2f       	mov	r25, r28
+		}
+		if (Y < 10 && Y > -10)
+		{
+			Y = 0;
+ 11e:	2d 2f       	mov	r18, r29
+ 120:	3c 2f       	mov	r19, r28
+		}
+//*******************starting mapping*************************
+
+		  if (X >= 0 && Y >= 0)          // First quadrant
+		  {
+			  int level = X - Y;
+ 122:	ac 01       	movw	r20, r24
+ 124:	42 1b       	sub	r20, r18
+ 126:	53 0b       	sbc	r21, r19
+			  if (level == 0)
+ 128:	59 f4       	brne	.+22     	; 0x140 <main+0xb0>
+			  {
+				  OCR0=abs(X);
+ 12a:	ac 01       	movw	r20, r24
+ 12c:	99 23       	and	r25, r25
+ 12e:	24 f4       	brge	.+8      	; 0x138 <main+0xa8>
+ 130:	44 27       	eor	r20, r20
+ 132:	55 27       	eor	r21, r21
+ 134:	48 1b       	sub	r20, r24
+ 136:	59 0b       	sbc	r21, r25
+ 138:	4c bf       	out	0x3c, r20	; 60
+				  OCR2=0;
+ 13a:	13 bc       	out	0x23, r1	; 35
+				  PORTB=(0<<PINB0)|(0<<PINB1);		
+ 13c:	18 ba       	out	0x18, r1	; 24
+ 13e:	e6 c0       	rjmp	.+460    	; 0x30c <main+0x27c>
+				  	  
+			   }
+			  if (level > 0)
+ 140:	14 16       	cp	r1, r20
+ 142:	15 06       	cpc	r1, r21
+ 144:	8c f4       	brge	.+34     	; 0x168 <main+0xd8>
+			  {
+				 
+				 OCR0=abs(X);
+ 146:	bc 01       	movw	r22, r24
+ 148:	99 23       	and	r25, r25
+ 14a:	24 f4       	brge	.+8      	; 0x154 <main+0xc4>
+ 14c:	66 27       	eor	r22, r22
+ 14e:	77 27       	eor	r23, r23
+ 150:	68 1b       	sub	r22, r24
+ 152:	79 0b       	sbc	r23, r25
+ 154:	6c bf       	out	0x3c, r22	; 60
+				 OCR2=abs(X-Y);
+ 156:	ba 01       	movw	r22, r20
+ 158:	55 23       	and	r21, r21
+ 15a:	24 f4       	brge	.+8      	; 0x164 <main+0xd4>
+ 15c:	66 27       	eor	r22, r22
+ 15e:	77 27       	eor	r23, r23
+ 160:	64 1b       	sub	r22, r20
+ 162:	75 0b       	sbc	r23, r21
+ 164:	63 bd       	out	0x23, r22	; 35
+				 PORTB=(0<<PINB0)|(1<<PINB1);
+ 166:	18 bb       	out	0x18, r17	; 24
+				 
+			  }
+			  if (level < 0)
+ 168:	55 23       	and	r21, r21
+ 16a:	0c f0       	brlt	.+2      	; 0x16e <main+0xde>
+ 16c:	cf c0       	rjmp	.+414    	; 0x30c <main+0x27c>
+			  {
+				 OCR0=abs(Y);
+ 16e:	b9 01       	movw	r22, r18
+ 170:	33 23       	and	r19, r19
+ 172:	24 f4       	brge	.+8      	; 0x17c <main+0xec>
+ 174:	66 27       	eor	r22, r22
+ 176:	77 27       	eor	r23, r23
+ 178:	62 1b       	sub	r22, r18
+ 17a:	73 0b       	sbc	r23, r19
+ 17c:	6c bf       	out	0x3c, r22	; 60
+				 OCR2=abs(X-Y);
+ 17e:	ba 01       	movw	r22, r20
+ 180:	55 23       	and	r21, r21
+ 182:	24 f4       	brge	.+8      	; 0x18c <main+0xfc>
+ 184:	66 27       	eor	r22, r22
+ 186:	77 27       	eor	r23, r23
+ 188:	64 1b       	sub	r22, r20
+ 18a:	75 0b       	sbc	r23, r21
+ 18c:	63 bd       	out	0x23, r22	; 35
+				 PORTB=(0<<PINB0)|(1<<PINB1);
+ 18e:	18 bb       	out	0x18, r17	; 24
+ 190:	bd c0       	rjmp	.+378    	; 0x30c <main+0x27c>
+			  }
+		  }
+		  
+		if (X <= 0 && Y >= 0) // Second Quad
+ 192:	33 23       	and	r19, r19
+ 194:	0c f4       	brge	.+2      	; 0x198 <main+0x108>
+ 196:	bf c0       	rjmp	.+382    	; 0x316 <main+0x286>
+		{
+			int level = X + Y;
+ 198:	ac 01       	movw	r20, r24
+ 19a:	42 0f       	add	r20, r18
+ 19c:	53 1f       	adc	r21, r19
+			if (level == 0)
+ 19e:	41 15       	cp	r20, r1
+ 1a0:	51 05       	cpc	r21, r1
+ 1a2:	59 f4       	brne	.+22     	; 0x1ba <main+0x12a>
+			{ 
+				OCR0=abs(0);
+ 1a4:	1c be       	out	0x3c, r1	; 60
+				OCR2=abs(Y);
+ 1a6:	a9 01       	movw	r20, r18
+ 1a8:	33 23       	and	r19, r19
+ 1aa:	24 f4       	brge	.+8      	; 0x1b4 <main+0x124>
+ 1ac:	44 27       	eor	r20, r20
+ 1ae:	55 27       	eor	r21, r21
+ 1b0:	42 1b       	sub	r20, r18
+ 1b2:	53 0b       	sbc	r21, r19
+ 1b4:	43 bd       	out	0x23, r20	; 35
+				PORTB=(0<<PINB0)|(0<<PINB1);
+ 1b6:	18 ba       	out	0x18, r1	; 24
+ 1b8:	27 c0       	rjmp	.+78     	; 0x208 <main+0x178>
+			}
+			if (level > 0)
+ 1ba:	14 16       	cp	r1, r20
+ 1bc:	15 06       	cpc	r1, r21
+ 1be:	8c f4       	brge	.+34     	; 0x1e2 <main+0x152>
+			{
+				OCR0=abs(Y+X);
+ 1c0:	ba 01       	movw	r22, r20
+ 1c2:	55 23       	and	r21, r21
+ 1c4:	24 f4       	brge	.+8      	; 0x1ce <main+0x13e>
+ 1c6:	66 27       	eor	r22, r22
+ 1c8:	77 27       	eor	r23, r23
+ 1ca:	64 1b       	sub	r22, r20
+ 1cc:	75 0b       	sbc	r23, r21
+ 1ce:	6c bf       	out	0x3c, r22	; 60
+				OCR2=abs(Y);
+ 1d0:	b9 01       	movw	r22, r18
+ 1d2:	33 23       	and	r19, r19
+ 1d4:	24 f4       	brge	.+8      	; 0x1de <main+0x14e>
+ 1d6:	66 27       	eor	r22, r22
+ 1d8:	77 27       	eor	r23, r23
+ 1da:	62 1b       	sub	r22, r18
+ 1dc:	73 0b       	sbc	r23, r19
+ 1de:	63 bd       	out	0x23, r22	; 35
+				PORTB=(0<<PINB0)|(0<<PINB1);
+ 1e0:	18 ba       	out	0x18, r1	; 24
+
+			}
+			if (level < 0)
+ 1e2:	55 23       	and	r21, r21
+ 1e4:	8c f4       	brge	.+34     	; 0x208 <main+0x178>
+			{
+					OCR0=abs(Y+X);
+ 1e6:	ba 01       	movw	r22, r20
+ 1e8:	55 23       	and	r21, r21
+ 1ea:	24 f4       	brge	.+8      	; 0x1f4 <main+0x164>
+ 1ec:	66 27       	eor	r22, r22
+ 1ee:	77 27       	eor	r23, r23
+ 1f0:	64 1b       	sub	r22, r20
+ 1f2:	75 0b       	sbc	r23, r21
+ 1f4:	6c bf       	out	0x3c, r22	; 60
+					OCR2=abs(X);
+ 1f6:	ac 01       	movw	r20, r24
+ 1f8:	99 23       	and	r25, r25
+ 1fa:	24 f4       	brge	.+8      	; 0x204 <main+0x174>
+ 1fc:	44 27       	eor	r20, r20
+ 1fe:	55 27       	eor	r21, r21
+ 200:	48 1b       	sub	r20, r24
+ 202:	59 0b       	sbc	r21, r25
+ 204:	43 bd       	out	0x23, r20	; 35
+					PORTB=(1<<PINB0)|(0<<PINB1);
+ 206:	08 bb       	out	0x18, r16	; 24
+			}
+		}
+		
+			
+		if (X >= 0 && Y <= 0) // Fourth quad
+ 208:	99 23       	and	r25, r25
+ 20a:	f4 f1       	brlt	.+124    	; 0x288 <main+0x1f8>
+ 20c:	12 16       	cp	r1, r18
+ 20e:	13 06       	cpc	r1, r19
+ 210:	0c f4       	brge	.+2      	; 0x214 <main+0x184>
+ 212:	50 cf       	rjmp	.-352    	; 0xb4 <main+0x24>
+		{
+			int level = X + Y;
+ 214:	a9 01       	movw	r20, r18
+ 216:	48 0f       	add	r20, r24
+ 218:	59 1f       	adc	r21, r25
+			if (level == 0)
+ 21a:	41 15       	cp	r20, r1
+ 21c:	51 05       	cpc	r21, r1
+ 21e:	59 f4       	brne	.+22     	; 0x236 <main+0x1a6>
+			{ 
+				OCR0=abs(0);
+ 220:	1c be       	out	0x3c, r1	; 60
+				OCR2=abs(Y);
+ 222:	a9 01       	movw	r20, r18
+ 224:	33 23       	and	r19, r19
+ 226:	24 f4       	brge	.+8      	; 0x230 <main+0x1a0>
+ 228:	44 27       	eor	r20, r20
+ 22a:	55 27       	eor	r21, r21
+ 22c:	42 1b       	sub	r20, r18
+ 22e:	53 0b       	sbc	r21, r19
+ 230:	43 bd       	out	0x23, r20	; 35
+				PORTB=(0<<PINB0)|(1<<PINB1);
+ 232:	18 bb       	out	0x18, r17	; 24
+ 234:	74 c0       	rjmp	.+232    	; 0x31e <main+0x28e>
+			}
+			if (level > 0)
+ 236:	14 16       	cp	r1, r20
+ 238:	15 06       	cpc	r1, r21
+ 23a:	8c f4       	brge	.+34     	; 0x25e <main+0x1ce>
+			{
+			   OCR0=abs(X+Y);
+ 23c:	ba 01       	movw	r22, r20
+ 23e:	55 23       	and	r21, r21
+ 240:	24 f4       	brge	.+8      	; 0x24a <main+0x1ba>
+ 242:	66 27       	eor	r22, r22
+ 244:	77 27       	eor	r23, r23
+ 246:	64 1b       	sub	r22, r20
+ 248:	75 0b       	sbc	r23, r21
+ 24a:	6c bf       	out	0x3c, r22	; 60
+			   OCR2=abs(X);
+ 24c:	bc 01       	movw	r22, r24
+ 24e:	99 23       	and	r25, r25
+ 250:	24 f4       	brge	.+8      	; 0x25a <main+0x1ca>
+ 252:	66 27       	eor	r22, r22
+ 254:	77 27       	eor	r23, r23
+ 256:	68 1b       	sub	r22, r24
+ 258:	79 0b       	sbc	r23, r25
+ 25a:	63 bd       	out	0x23, r22	; 35
+			   PORTB=(0<<PINB0)|(1<<PINB1);
+ 25c:	18 bb       	out	0x18, r17	; 24
+
+			}
+			if (level < 0)
+ 25e:	55 23       	and	r21, r21
+ 260:	0c f0       	brlt	.+2      	; 0x264 <main+0x1d4>
+ 262:	5d c0       	rjmp	.+186    	; 0x31e <main+0x28e>
+			{
+				OCR0=abs(X+Y);
+ 264:	ba 01       	movw	r22, r20
+ 266:	55 23       	and	r21, r21
+ 268:	24 f4       	brge	.+8      	; 0x272 <main+0x1e2>
+ 26a:	66 27       	eor	r22, r22
+ 26c:	77 27       	eor	r23, r23
+ 26e:	64 1b       	sub	r22, r20
+ 270:	75 0b       	sbc	r23, r21
+ 272:	6c bf       	out	0x3c, r22	; 60
+				OCR2=abs(Y);
+ 274:	a9 01       	movw	r20, r18
+ 276:	33 23       	and	r19, r19
+ 278:	24 f4       	brge	.+8      	; 0x282 <main+0x1f2>
+ 27a:	44 27       	eor	r20, r20
+ 27c:	55 27       	eor	r21, r21
+ 27e:	42 1b       	sub	r20, r18
+ 280:	53 0b       	sbc	r21, r19
+ 282:	43 bd       	out	0x23, r20	; 35
+				PORTB=(1<<PINB0)|(1<<PINB1);
+ 284:	f8 ba       	out	0x18, r15	; 24
+ 286:	4b c0       	rjmp	.+150    	; 0x31e <main+0x28e>
+			}
+		}  
+		
+		
+		if (X <= 0 && Y <=0) // Third quad
+ 288:	12 16       	cp	r1, r18
+ 28a:	13 06       	cpc	r1, r19
+ 28c:	0c f4       	brge	.+2      	; 0x290 <main+0x200>
+ 28e:	12 cf       	rjmp	.-476    	; 0xb4 <main+0x24>
+			{
+				int level = X - Y;
+ 290:	ac 01       	movw	r20, r24
+ 292:	42 1b       	sub	r20, r18
+ 294:	53 0b       	sbc	r21, r19
+				if (level == 0)
+ 296:	59 f4       	brne	.+22     	; 0x2ae <main+0x21e>
+				{ 
+					OCR0=abs(X);
+ 298:	9c 01       	movw	r18, r24
+ 29a:	99 23       	and	r25, r25
+ 29c:	24 f4       	brge	.+8      	; 0x2a6 <main+0x216>
+ 29e:	22 27       	eor	r18, r18
+ 2a0:	33 27       	eor	r19, r19
+ 2a2:	28 1b       	sub	r18, r24
+ 2a4:	39 0b       	sbc	r19, r25
+ 2a6:	2c bf       	out	0x3c, r18	; 60
+					OCR2=abs(0);
+ 2a8:	13 bc       	out	0x23, r1	; 35
+					PORTB=(1<<PINB0)|(0<<PINB1);
+ 2aa:	08 bb       	out	0x18, r16	; 24
+ 2ac:	03 cf       	rjmp	.-506    	; 0xb4 <main+0x24>
+				}
+				if (level > 0)
+ 2ae:	14 16       	cp	r1, r20
+ 2b0:	15 06       	cpc	r1, r21
+ 2b2:	8c f4       	brge	.+34     	; 0x2d6 <main+0x246>
+				{
+					
+					OCR0=abs(Y);
+ 2b4:	b9 01       	movw	r22, r18
+ 2b6:	33 23       	and	r19, r19
+ 2b8:	24 f4       	brge	.+8      	; 0x2c2 <main+0x232>
+ 2ba:	66 27       	eor	r22, r22
+ 2bc:	77 27       	eor	r23, r23
+ 2be:	62 1b       	sub	r22, r18
+ 2c0:	73 0b       	sbc	r23, r19
+ 2c2:	6c bf       	out	0x3c, r22	; 60
+					OCR2=abs(X-Y);
+ 2c4:	9a 01       	movw	r18, r20
+ 2c6:	55 23       	and	r21, r21
+ 2c8:	24 f4       	brge	.+8      	; 0x2d2 <main+0x242>
+ 2ca:	22 27       	eor	r18, r18
+ 2cc:	33 27       	eor	r19, r19
+ 2ce:	24 1b       	sub	r18, r20
+ 2d0:	35 0b       	sbc	r19, r21
+ 2d2:	23 bd       	out	0x23, r18	; 35
+					PORTB=(1<<PINB0)|(1<<PINB1);
+ 2d4:	f8 ba       	out	0x18, r15	; 24
+				}
+				if (level < 0)
+ 2d6:	55 23       	and	r21, r21
+ 2d8:	0c f0       	brlt	.+2      	; 0x2dc <main+0x24c>
+ 2da:	ec ce       	rjmp	.-552    	; 0xb4 <main+0x24>
+				{  
+					OCR0=abs(X);
+ 2dc:	9c 01       	movw	r18, r24
+ 2de:	99 23       	and	r25, r25
+ 2e0:	24 f4       	brge	.+8      	; 0x2ea <main+0x25a>
+ 2e2:	22 27       	eor	r18, r18
+ 2e4:	33 27       	eor	r19, r19
+ 2e6:	28 1b       	sub	r18, r24
+ 2e8:	39 0b       	sbc	r19, r25
+ 2ea:	2c bf       	out	0x3c, r18	; 60
+					OCR2=abs(X-Y);
+ 2ec:	ca 01       	movw	r24, r20
+ 2ee:	99 23       	and	r25, r25
+ 2f0:	24 f4       	brge	.+8      	; 0x2fa <main+0x26a>
+ 2f2:	88 27       	eor	r24, r24
+ 2f4:	99 27       	eor	r25, r25
+ 2f6:	84 1b       	sub	r24, r20
+ 2f8:	95 0b       	sbc	r25, r21
+ 2fa:	83 bd       	out	0x23, r24	; 35
+					PORTB=(1<<PINB0)|(0<<PINB1);
+ 2fc:	08 bb       	out	0x18, r16	; 24
+ 2fe:	da ce       	rjmp	.-588    	; 0xb4 <main+0x24>
+		{
+			Y = 0;
+		}
+//*******************starting mapping*************************
+
+		  if (X >= 0 && Y >= 0)          // First quadrant
+ 300:	99 23       	and	r25, r25
+ 302:	0c f0       	brlt	.+2      	; 0x306 <main+0x276>
+ 304:	07 cf       	rjmp	.-498    	; 0x114 <main+0x84>
+		{
+			X = 0;
+		}
+		if (Y < 10 && Y > -10)
+		{
+			Y = 0;
+ 306:	2d 2f       	mov	r18, r29
+ 308:	3c 2f       	mov	r19, r28
+ 30a:	43 cf       	rjmp	.-378    	; 0x192 <main+0x102>
+				 OCR2=abs(X-Y);
+				 PORTB=(0<<PINB0)|(1<<PINB1);
+			  }
+		  }
+		  
+		if (X <= 0 && Y >= 0) // Second Quad
+ 30c:	18 16       	cp	r1, r24
+ 30e:	19 06       	cpc	r1, r25
+ 310:	0c f4       	brge	.+2      	; 0x314 <main+0x284>
+ 312:	7c cf       	rjmp	.-264    	; 0x20c <main+0x17c>
+ 314:	41 cf       	rjmp	.-382    	; 0x198 <main+0x108>
+					PORTB=(1<<PINB0)|(0<<PINB1);
+			}
+		}
+		
+			
+		if (X >= 0 && Y <= 0) // Fourth quad
+ 316:	99 23       	and	r25, r25
+ 318:	0c f0       	brlt	.+2      	; 0x31c <main+0x28c>
+ 31a:	7c cf       	rjmp	.-264    	; 0x214 <main+0x184>
+ 31c:	b9 cf       	rjmp	.-142    	; 0x290 <main+0x200>
+				PORTB=(1<<PINB0)|(1<<PINB1);
+			}
+		}  
+		
+		
+		if (X <= 0 && Y <=0) // Third quad
+ 31e:	18 16       	cp	r1, r24
+ 320:	19 06       	cpc	r1, r25
+ 322:	0c f4       	brge	.+2      	; 0x326 <main+0x296>
+ 324:	c7 ce       	rjmp	.-626    	; 0xb4 <main+0x24>
+ 326:	b4 cf       	rjmp	.-152    	; 0x290 <main+0x200>
+		int Y=(joylevel2-512)/2;
+		if (X < 10 && X > -10)
+		{
+			X = 0;
+		}
+		if (Y < 10 && Y > -10)
+ 328:	c9 01       	movw	r24, r18
+ 32a:	09 96       	adiw	r24, 0x09	; 9
+ 32c:	43 97       	sbiw	r24, 0x13	; 19
+ 32e:	08 f4       	brcc	.+2      	; 0x332 <main+0x2a2>
+ 330:	f4 ce       	rjmp	.-536    	; 0x11a <main+0x8a>
+		
+		int X=(joylevel1-512)/2;
+		int Y=(joylevel2-512)/2;
+		if (X < 10 && X > -10)
+		{
+			X = 0;
+ 332:	8d 2f       	mov	r24, r29
+ 334:	9c 2f       	mov	r25, r28
+ 336:	e7 ce       	rjmp	.-562    	; 0x106 <main+0x76>
+				 OCR2=abs(X-Y);
+				 PORTB=(0<<PINB0)|(1<<PINB1);
+			  }
+		  }
+		  
+		if (X <= 0 && Y >= 0) // Second Quad
+ 338:	18 16       	cp	r1, r24
+ 33a:	19 06       	cpc	r1, r25
+ 33c:	0c f4       	brge	.+2      	; 0x340 <main+0x2b0>
+ 33e:	66 cf       	rjmp	.-308    	; 0x20c <main+0x17c>
+ 340:	69 cf       	rjmp	.-302    	; 0x214 <main+0x184>
+
+00000342 <__vector_14>:
+    }
+}
+
+
+ISR(ADC_vect)
+{   uint8_t  LOWval = ADCL;
+ 342:	1f 92       	push	r1
+ 344:	0f 92       	push	r0
+ 346:	0f b6       	in	r0, 0x3f	; 63
+ 348:	0f 92       	push	r0
+ 34a:	11 24       	eor	r1, r1
+ 34c:	2f 93       	push	r18
+ 34e:	8f 93       	push	r24
+ 350:	9f 93       	push	r25
+ 352:	84 b1       	in	r24, 0x04	; 4
+	Ten_bit_val=(ADCH<<8)|(LOWval);
+ 354:	25 b1       	in	r18, 0x05	; 5
+ 356:	90 e0       	ldi	r25, 0x00	; 0
+ 358:	92 2b       	or	r25, r18
+ 35a:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <Ten_bit_val+0x1>
+ 35e:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <Ten_bit_val>
+	
+	switch(ADMUX)
+ 362:	27 b1       	in	r18, 0x07	; 7
+ 364:	20 3c       	cpi	r18, 0xC0	; 192
+ 366:	19 f0       	breq	.+6      	; 0x36e <__vector_14+0x2c>
+ 368:	21 3c       	cpi	r18, 0xC1	; 193
+ 36a:	41 f0       	breq	.+16     	; 0x37c <__vector_14+0x3a>
+ 36c:	0d c0       	rjmp	.+26     	; 0x388 <__vector_14+0x46>
+	{
+	 case 0xC0:
+		  {
+			   joylevel1=Ten_bit_val;
+ 36e:	90 93 65 00 	sts	0x0065, r25	; 0x800065 <joylevel1+0x1>
+ 372:	80 93 64 00 	sts	0x0064, r24	; 0x800064 <joylevel1>
+			   ADMUX=0xC1;
+ 376:	81 ec       	ldi	r24, 0xC1	; 193
+ 378:	87 b9       	out	0x07, r24	; 7
+			   break;
+ 37a:	06 c0       	rjmp	.+12     	; 0x388 <__vector_14+0x46>
+		  }
+	 case 0xC1:
+	      {
+			   joylevel2=Ten_bit_val;
+ 37c:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
+ 380:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+			   ADMUX=0XC0;
+ 384:	80 ec       	ldi	r24, 0xC0	; 192
+ 386:	87 b9       	out	0x07, r24	; 7
+			   break;
+		  }
+	}
+	ADCSRA|= (1<<ADSC);
+ 388:	36 9a       	sbi	0x06, 6	; 6
+}
+ 38a:	9f 91       	pop	r25
+ 38c:	8f 91       	pop	r24
+ 38e:	2f 91       	pop	r18
+ 390:	0f 90       	pop	r0
+ 392:	0f be       	out	0x3f, r0	; 63
+ 394:	0f 90       	pop	r0
+ 396:	1f 90       	pop	r1
+ 398:	18 95       	reti
+
+0000039a <_exit>:
+ 39a:	f8 94       	cli
+
+0000039c <__stop_program>:
+ 39c:	ff cf       	rjmp	.-2      	; 0x39c <__stop_program>
