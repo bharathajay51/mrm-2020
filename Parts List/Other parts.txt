@@ -1,0 +1,25 @@
+ATMEGA16
+
+5x20 glass fuses and fuse holders which can be made into a box.
+
+Proper 1.5 to 2.5sqmm wire for high current connections.
+
+Battery terminals may be spade 6.3mm for lead acid or XT60 for lipos.
+
+Battery itself.
+
+Connectors for easy removal of parts, connectors with reverse polarity protection.
+
+Raspberry Pi model 3B+ (considering latest one is cheapest) 
+
+Raspberry Pi Camera Board, Version 2, Sony IMX219 but any generic interfacable camera would work for simple prototype
+
+For debugging ACS712 current sense modules may be used to monitor current or observe say…how motor current changes based on slope , etc also help detect problems.
+
+Vero boards to make circuits on for example atmega16’s board.
+
+Dupont type male to male wires and male to female wires/ribbon cable with clip-on connectors which don’t get removed in vibrations.
+
+Lots of passives and heatsinks for drivers.
+
+
