@@ -1,0 +1,55 @@
+/*
+ * Recieve Char.c
+ *
+ * Created: 23-01-2019 20:36:33
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <util/delay.h>
+
+uint8_t UBBRval=51; 
+char m;
+
+int main(void)
+{  Uart_initialize(uint8_t UBBRval) 
+    DDRC|=1<<PINC0;
+	PORTC&=~(1<<PINC0);
+    
+	m=Recieve();
+	if(m=='A')
+	{
+		PORTC|=(1<<PINC0);
+		_delay_ms(100);
+		PORTC&=~(1<<PINC0);
+		_delay_ms(100);
+	}
+	
+}
+
+
+
+void Uart_initialize(uint8_t UBBRval)         
+{ //**********************************For initializing frame of UART******************************************************** 
+	
+	UCSRC|=(1<<URSEL);                                          // As UCSRC and UBRRH have same location in microcontroller, therefore URSEL needs to be set hing when writing in UCSRC.
+	//UCSRC &=~(1<<UMSEL);                                       // Selecting Asynchronous mode (Auto matically set to ASynchronous);
+	UBRRL=UBBRval;
+	UCSRA|=(1<<U2X);                                         // double speed operation.
+	UCSRC|=(1<<UCSZ1)|(1<<UCSZ0);                   // 8-bit data length set.
+	UCSRC|=(1<<UPM1);                                          // Even parity enabelled.
+	UCSRC|=(1<<USBS);                                          // 2-bit stop.
+
+//******************************************* initializing Transmitter and Reciever*******************************************
+
+    UCSRB|=(1<<RXEN)|(1<<TXEN);
+
+}
+
+
+char Recieve()
+{   
+	PORTC^=(1<<PINC0);
+	while (! (UCSRA & (1 << RXC)) );  
+    return UDR;
+}

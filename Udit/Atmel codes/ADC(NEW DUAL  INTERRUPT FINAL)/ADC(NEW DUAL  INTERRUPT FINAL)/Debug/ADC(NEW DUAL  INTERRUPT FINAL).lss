@@ -1,0 +1,255 @@
+
+ADC(NEW DUAL  INTERRUPT FINAL).elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000168  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001dc  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000008  00800060  00800060  000001dc  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000001dc  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000020c  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000028  00000000  00000000  00000248  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   00000613  00000000  00000000  00000270  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000577  00000000  00000000  00000883  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   0000025c  00000000  00000000  00000dfa  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000058  00000000  00000000  00001058  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000338  00000000  00000000  000010b0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    00000070  00000000  00000000  000013e8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000018  00000000  00000000  00001458  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 50 00 	jmp	0xa0	; 0xa0 <__vector_14>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a8 36       	cpi	r26, 0x68	; 104
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 3e 00 	call	0x7c	; 0x7c <main>
+  74:	0c 94 b2 00 	jmp	0x164	; 0x164 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <main>:
+
+
+int main(void)
+{ 
+	
+	TCCR0 |= (1<<WGM01) |(1<<WGM00) | (1<<COM01) | (1<<CS00); //setting PWM for pin3 port B
+  7c:	83 b7       	in	r24, 0x33	; 51
+  7e:	89 66       	ori	r24, 0x69	; 105
+  80:	83 bf       	out	0x33, r24	; 51
+	TCCR2 |= (1<<WGM21) |(1<<WGM20) | (1<<COM21) | (1<<CS20);
+  82:	85 b5       	in	r24, 0x25	; 37
+  84:	89 66       	ori	r24, 0x69	; 105
+  86:	85 bd       	out	0x25, r24	; 37
+	DDRB |= (1<<PINB3);
+  88:	bb 9a       	sbi	0x17, 3	; 23
+	DDRD |= (1<<PIND7);
+  8a:	8f 9a       	sbi	0x11, 7	; 17
+	ADMUX |= (1<<REFS0)|(1<<ADLAR); // taking input voltage as reference & doing right shift to the result
+  8c:	87 b1       	in	r24, 0x07	; 7
+  8e:	80 66       	ori	r24, 0x60	; 96
+  90:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= 1<<ADPS2; // prescaller set to 16
+  92:	32 9a       	sbi	0x06, 2	; 6
+	ADCSRA |= 1<<ADEN;
+  94:	37 9a       	sbi	0x06, 7	; 6
+	ADCSRA |= 1<<ADIE;
+  96:	33 9a       	sbi	0x06, 3	; 6
+	ADCSRA|=1<<ADATE;
+  98:	35 9a       	sbi	0x06, 5	; 6
+	sei();
+  9a:	78 94       	sei
+	
+	ADCSRA |= 1<<ADSC;
+  9c:	36 9a       	sbi	0x06, 6	; 6
+  9e:	ff cf       	rjmp	.-2      	; 0x9e <main+0x22>
+
+000000a0 <__vector_14>:
+	}
+		
+}
+
+ISR(ADC_vect)
+{  
+  a0:	1f 92       	push	r1
+  a2:	0f 92       	push	r0
+  a4:	0f b6       	in	r0, 0x3f	; 63
+  a6:	0f 92       	push	r0
+  a8:	11 24       	eor	r1, r1
+  aa:	2f 93       	push	r18
+  ac:	3f 93       	push	r19
+  ae:	4f 93       	push	r20
+  b0:	8f 93       	push	r24
+  b2:	9f 93       	push	r25
+	 bitval=ADCH;
+  b4:	85 b1       	in	r24, 0x05	; 5
+  b6:	90 e0       	ldi	r25, 0x00	; 0
+  b8:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <_edata+0x1>
+  bc:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <_edata>
+	 lv=ADCL;
+  c0:	84 b1       	in	r24, 0x04	; 4
+  c2:	90 e0       	ldi	r25, 0x00	; 0
+  c4:	90 93 65 00 	sts	0x0065, r25	; 0x800065 <lv+0x1>
+  c8:	80 93 64 00 	sts	0x0064, r24	; 0x800064 <lv>
+	 Tenbit=(ADCH<<6|lv>>2);
+  cc:	25 b1       	in	r18, 0x05	; 5
+  ce:	40 e4       	ldi	r20, 0x40	; 64
+  d0:	24 9f       	mul	r18, r20
+  d2:	90 01       	movw	r18, r0
+  d4:	11 24       	eor	r1, r1
+  d6:	95 95       	asr	r25
+  d8:	87 95       	ror	r24
+  da:	95 95       	asr	r25
+  dc:	87 95       	ror	r24
+  de:	82 2b       	or	r24, r18
+  e0:	93 2b       	or	r25, r19
+  e2:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <Tenbit+0x1>
+  e6:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <Tenbit>
+	 joyval=(ADCH-128);
+  ea:	85 b1       	in	r24, 0x05	; 5
+  ec:	90 e0       	ldi	r25, 0x00	; 0
+  ee:	80 58       	subi	r24, 0x80	; 128
+  f0:	91 09       	sbc	r25, r1
+	 if(abs(joyval)<=25)
+  f2:	9c 01       	movw	r18, r24
+  f4:	27 5e       	subi	r18, 0xE7	; 231
+  f6:	3f 4f       	sbci	r19, 0xFF	; 255
+  f8:	23 33       	cpi	r18, 0x33	; 51
+  fa:	31 05       	cpc	r19, r1
+  fc:	28 f0       	brcs	.+10     	; 0x108 <__vector_14+0x68>
+ISR(ADC_vect)
+{  
+	 bitval=ADCH;
+	 lv=ADCL;
+	 Tenbit=(ADCH<<6|lv>>2);
+	 joyval=(ADCH-128);
+  fe:	90 93 67 00 	sts	0x0067, r25	; 0x800067 <joyval+0x1>
+ 102:	80 93 66 00 	sts	0x0066, r24	; 0x800066 <joyval>
+ 106:	04 c0       	rjmp	.+8      	; 0x110 <__vector_14+0x70>
+	 if(abs(joyval)<=25)
+	 {
+		 joyval=0;
+ 108:	10 92 67 00 	sts	0x0067, r1	; 0x800067 <joyval+0x1>
+ 10c:	10 92 66 00 	sts	0x0066, r1	; 0x800066 <joyval>
+	 }
+	 
+		
+	switch(ADMUX)
+ 110:	87 b1       	in	r24, 0x07	; 7
+ 112:	80 36       	cpi	r24, 0x60	; 96
+ 114:	19 f0       	breq	.+6      	; 0x11c <__vector_14+0x7c>
+ 116:	81 36       	cpi	r24, 0x61	; 97
+ 118:	71 f0       	breq	.+28     	; 0x136 <__vector_14+0x96>
+ 11a:	19 c0       	rjmp	.+50     	; 0x14e <__vector_14+0xae>
+	{
+		case 0x60:
+		{
+		OCR0=abs(joyval);
+ 11c:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <joyval>
+ 120:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <joyval+0x1>
+ 124:	99 23       	and	r25, r25
+ 126:	1c f4       	brge	.+6      	; 0x12e <__vector_14+0x8e>
+ 128:	91 95       	neg	r25
+ 12a:	81 95       	neg	r24
+ 12c:	91 09       	sbc	r25, r1
+ 12e:	8c bf       	out	0x3c, r24	; 60
+		ADMUX=0x61;
+ 130:	81 e6       	ldi	r24, 0x61	; 97
+ 132:	87 b9       	out	0x07, r24	; 7
+		break;	
+ 134:	0c c0       	rjmp	.+24     	; 0x14e <__vector_14+0xae>
+		}
+		
+		case 0x61:
+		{
+			OCR2=abs(joyval);
+ 136:	80 91 66 00 	lds	r24, 0x0066	; 0x800066 <joyval>
+ 13a:	90 91 67 00 	lds	r25, 0x0067	; 0x800067 <joyval+0x1>
+ 13e:	99 23       	and	r25, r25
+ 140:	1c f4       	brge	.+6      	; 0x148 <__vector_14+0xa8>
+ 142:	91 95       	neg	r25
+ 144:	81 95       	neg	r24
+ 146:	91 09       	sbc	r25, r1
+ 148:	83 bd       	out	0x23, r24	; 35
+			ADMUX=0x60;
+ 14a:	80 e6       	ldi	r24, 0x60	; 96
+ 14c:	87 b9       	out	0x07, r24	; 7
+			break;
+		}
+		
+	}
+	ADCSRA|=1<<ADSC;
+ 14e:	36 9a       	sbi	0x06, 6	; 6
+	
+}
+ 150:	9f 91       	pop	r25
+ 152:	8f 91       	pop	r24
+ 154:	4f 91       	pop	r20
+ 156:	3f 91       	pop	r19
+ 158:	2f 91       	pop	r18
+ 15a:	0f 90       	pop	r0
+ 15c:	0f be       	out	0x3f, r0	; 63
+ 15e:	0f 90       	pop	r0
+ 160:	1f 90       	pop	r1
+ 162:	18 95       	reti
+
+00000164 <_exit>:
+ 164:	f8 94       	cli
+
+00000166 <__stop_program>:
+ 166:	ff cf       	rjmp	.-2      	; 0x166 <__stop_program>

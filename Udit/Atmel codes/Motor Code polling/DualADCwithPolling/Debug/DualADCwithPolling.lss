@@ -1,0 +1,714 @@
+
+DualADCwithPolling.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         0000038a  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000003fe  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          0000000d  00800060  00800060  000003fe  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  000003fe  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000430  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000038  00000000  00000000  0000046c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000007cc  00000000  00000000  000004a4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000612  00000000  00000000  00000c70  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000440  00000000  00000000  00001282  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_frame  00000054  00000000  00000000  000016c4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_str    00000354  00000000  00000000  00001718  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_loc    000002c7  00000000  00000000  00001a6c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_ranges 00000028  00000000  00000000  00001d33  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   8:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+   c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	20 e0       	ldi	r18, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	ad 36       	cpi	r26, 0x6D	; 109
+  6c:	b2 07       	cpc	r27, r18
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 9d 01 	call	0x33a	; 0x33a <main>
+  74:	0c 94 c3 01 	jmp	0x386	; 0x386 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <ADC_initialise>:
+
+
+
+void ADC_initialise(void)
+{
+	ADMUX=(1<<REFS0)|(1<<ADLAR);
+  7c:	80 e6       	ldi	r24, 0x60	; 96
+  7e:	87 b9       	out	0x07, r24	; 7
+	ADCSRA=(1<<ADEN)|(1<<ADPS2);
+  80:	84 e8       	ldi	r24, 0x84	; 132
+  82:	86 b9       	out	0x06, r24	; 6
+  84:	08 95       	ret
+
+00000086 <ADC_channel>:
+}
+
+int ADC_channel(int channel)
+{
+	channel &= 0b00000111;
+	ADMUX|=channel;
+  86:	27 b1       	in	r18, 0x07	; 7
+  88:	87 70       	andi	r24, 0x07	; 7
+  8a:	99 27       	eor	r25, r25
+  8c:	82 2b       	or	r24, r18
+  8e:	87 b9       	out	0x07, r24	; 7
+	ADCSRA|=(1<<ADSC);
+  90:	36 9a       	sbi	0x06, 6	; 6
+	while((ADCSRA & (1<<ADSC)))
+  92:	36 9b       	sbis	0x06, 6	; 6
+  94:	03 c0       	rjmp	.+6      	; 0x9c <ADC_channel+0x16>
+	
+	//_delay_ms (10);
+	ADCSRA|=(1<<ADIF);
+  96:	34 9a       	sbi	0x06, 4	; 6
+int ADC_channel(int channel)
+{
+	channel &= 0b00000111;
+	ADMUX|=channel;
+	ADCSRA|=(1<<ADSC);
+	while((ADCSRA & (1<<ADSC)))
+  98:	36 99       	sbic	0x06, 6	; 6
+  9a:	fd cf       	rjmp	.-6      	; 0x96 <ADC_channel+0x10>
+	
+	//_delay_ms (10);
+	ADCSRA|=(1<<ADIF);
+	 lv=ADCL;
+  9c:	24 b1       	in	r18, 0x04	; 4
+  9e:	20 93 68 00 	sts	0x0068, r18	; 0x800068 <lv>
+	Tenbit=ADCH<<6|lv>>2;
+  a2:	85 b1       	in	r24, 0x05	; 5
+  a4:	30 e4       	ldi	r19, 0x40	; 64
+  a6:	83 9f       	mul	r24, r19
+  a8:	c0 01       	movw	r24, r0
+  aa:	11 24       	eor	r1, r1
+  ac:	26 95       	lsr	r18
+  ae:	26 95       	lsr	r18
+  b0:	82 2b       	or	r24, r18
+  b2:	90 93 65 00 	sts	0x0065, r25	; 0x800065 <Tenbit+0x1>
+  b6:	80 93 64 00 	sts	0x0064, r24	; 0x800064 <Tenbit>
+	
+		 joyval	=(ADCH-128);
+  ba:	85 b1       	in	r24, 0x05	; 5
+  bc:	90 e0       	ldi	r25, 0x00	; 0
+  be:	80 58       	subi	r24, 0x80	; 128
+  c0:	91 09       	sbc	r25, r1
+  c2:	90 93 6a 00 	sts	0x006A, r25	; 0x80006a <joyval+0x1>
+  c6:	80 93 69 00 	sts	0x0069, r24	; 0x800069 <joyval>
+	return(joyval);
+}
+  ca:	08 95       	ret
+
+000000cc <drive>:
+
+
+int drive(int X,int Y)
+{
+	
+	if(abs(X)<=30)
+  cc:	9c 01       	movw	r18, r24
+  ce:	22 5e       	subi	r18, 0xE2	; 226
+  d0:	3f 4f       	sbci	r19, 0xFF	; 255
+  d2:	2d 33       	cpi	r18, 0x3D	; 61
+  d4:	31 05       	cpc	r19, r1
+  d6:	08 f4       	brcc	.+2      	; 0xda <drive+0xe>
+  d8:	20 c1       	rjmp	.+576    	; 0x31a <drive+0x24e>
+	{
+		X=0;
+	}
+	if(abs(Y)<=30)
+  da:	9b 01       	movw	r18, r22
+  dc:	22 5e       	subi	r18, 0xE2	; 226
+  de:	3f 4f       	sbci	r19, 0xFF	; 255
+  e0:	2d 33       	cpi	r18, 0x3D	; 61
+  e2:	31 05       	cpc	r19, r1
+  e4:	08 f4       	brcc	.+2      	; 0xe8 <drive+0x1c>
+  e6:	05 c1       	rjmp	.+522    	; 0x2f2 <drive+0x226>
+	{
+		Y=0;
+	}
+	
+	if (X >= 0 && Y >= 0)          // First quadrant
+  e8:	99 23       	and	r25, r25
+  ea:	0c f4       	brge	.+2      	; 0xee <drive+0x22>
+  ec:	44 c0       	rjmp	.+136    	; 0x176 <drive+0xaa>
+  ee:	77 23       	and	r23, r23
+  f0:	0c f4       	brge	.+2      	; 0xf4 <drive+0x28>
+  f2:	1b c1       	rjmp	.+566    	; 0x32a <drive+0x25e>
+  f4:	07 c0       	rjmp	.+14     	; 0x104 <drive+0x38>
+	{
+		X=0;
+	}
+	if(abs(Y)<=30)
+	{
+		Y=0;
+  f6:	60 e0       	ldi	r22, 0x00	; 0
+  f8:	70 e0       	ldi	r23, 0x00	; 0
+  fa:	04 c0       	rjmp	.+8      	; 0x104 <drive+0x38>
+int drive(int X,int Y)
+{
+	
+	if(abs(X)<=30)
+	{
+		X=0;
+  fc:	80 e0       	ldi	r24, 0x00	; 0
+  fe:	90 e0       	ldi	r25, 0x00	; 0
+	}
+	if(abs(Y)<=30)
+	{
+		Y=0;
+ 100:	60 e0       	ldi	r22, 0x00	; 0
+ 102:	70 e0       	ldi	r23, 0x00	; 0
+	}
+	
+	if (X >= 0 && Y >= 0)          // First quadrant
+	{
+		int level = X - Y;
+ 104:	9c 01       	movw	r18, r24
+ 106:	26 1b       	sub	r18, r22
+ 108:	37 0b       	sbc	r19, r23
+		if (level == 0)
+ 10a:	59 f4       	brne	.+22     	; 0x122 <drive+0x56>
+		{
+			OCR0=abs(X);
+ 10c:	9c 01       	movw	r18, r24
+ 10e:	99 23       	and	r25, r25
+ 110:	24 f4       	brge	.+8      	; 0x11a <drive+0x4e>
+ 112:	22 27       	eor	r18, r18
+ 114:	33 27       	eor	r19, r19
+ 116:	28 1b       	sub	r18, r24
+ 118:	39 0b       	sbc	r19, r25
+ 11a:	2c bf       	out	0x3c, r18	; 60
+			OCR2=0;
+ 11c:	13 bc       	out	0x23, r1	; 35
+			PORTB=(0<<PINB0)|(0<<PINB1);
+ 11e:	18 ba       	out	0x18, r1	; 24
+ 120:	ee c0       	rjmp	.+476    	; 0x2fe <drive+0x232>
+			
+		}
+		if (level > 0)
+ 122:	12 16       	cp	r1, r18
+ 124:	13 06       	cpc	r1, r19
+ 126:	94 f4       	brge	.+36     	; 0x14c <drive+0x80>
+		{
+			
+			OCR0=abs(X);
+ 128:	ac 01       	movw	r20, r24
+ 12a:	99 23       	and	r25, r25
+ 12c:	24 f4       	brge	.+8      	; 0x136 <drive+0x6a>
+ 12e:	44 27       	eor	r20, r20
+ 130:	55 27       	eor	r21, r21
+ 132:	48 1b       	sub	r20, r24
+ 134:	59 0b       	sbc	r21, r25
+ 136:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X-Y);
+ 138:	a9 01       	movw	r20, r18
+ 13a:	33 23       	and	r19, r19
+ 13c:	24 f4       	brge	.+8      	; 0x146 <drive+0x7a>
+ 13e:	44 27       	eor	r20, r20
+ 140:	55 27       	eor	r21, r21
+ 142:	42 1b       	sub	r20, r18
+ 144:	53 0b       	sbc	r21, r19
+ 146:	43 bd       	out	0x23, r20	; 35
+			PORTB=(0<<PINB0)|(1<<PINB1);
+ 148:	42 e0       	ldi	r20, 0x02	; 2
+ 14a:	48 bb       	out	0x18, r20	; 24
+			
+		}
+		if (level < 0)
+ 14c:	33 23       	and	r19, r19
+ 14e:	0c f0       	brlt	.+2      	; 0x152 <drive+0x86>
+ 150:	d6 c0       	rjmp	.+428    	; 0x2fe <drive+0x232>
+		{
+			OCR0=abs(Y);
+ 152:	ab 01       	movw	r20, r22
+ 154:	77 23       	and	r23, r23
+ 156:	24 f4       	brge	.+8      	; 0x160 <drive+0x94>
+ 158:	44 27       	eor	r20, r20
+ 15a:	55 27       	eor	r21, r21
+ 15c:	46 1b       	sub	r20, r22
+ 15e:	57 0b       	sbc	r21, r23
+ 160:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X-Y);
+ 162:	a9 01       	movw	r20, r18
+ 164:	33 23       	and	r19, r19
+ 166:	24 f4       	brge	.+8      	; 0x170 <drive+0xa4>
+ 168:	44 27       	eor	r20, r20
+ 16a:	55 27       	eor	r21, r21
+ 16c:	42 1b       	sub	r20, r18
+ 16e:	53 0b       	sbc	r21, r19
+ 170:	43 bd       	out	0x23, r20	; 35
+			PORTB=(0<<PINB0)|(0<<PINB1);
+ 172:	18 ba       	out	0x18, r1	; 24
+ 174:	c4 c0       	rjmp	.+392    	; 0x2fe <drive+0x232>
+		}
+	}
+	
+	if (X <= 0 && Y >= 0) // Second Quad
+ 176:	77 23       	and	r23, r23
+ 178:	0c f4       	brge	.+2      	; 0x17c <drive+0xb0>
+ 17a:	c6 c0       	rjmp	.+396    	; 0x308 <drive+0x23c>
+	{
+		int level = X + Y;
+ 17c:	9c 01       	movw	r18, r24
+ 17e:	26 0f       	add	r18, r22
+ 180:	37 1f       	adc	r19, r23
+		if (level == 0)
+ 182:	21 15       	cp	r18, r1
+ 184:	31 05       	cpc	r19, r1
+ 186:	59 f4       	brne	.+22     	; 0x19e <drive+0xd2>
+		{   
+			OCR2=abs(Y);
+ 188:	9b 01       	movw	r18, r22
+ 18a:	77 23       	and	r23, r23
+ 18c:	24 f4       	brge	.+8      	; 0x196 <drive+0xca>
+ 18e:	22 27       	eor	r18, r18
+ 190:	33 27       	eor	r19, r19
+ 192:	26 1b       	sub	r18, r22
+ 194:	37 0b       	sbc	r19, r23
+ 196:	23 bd       	out	0x23, r18	; 35
+			OCR0=0;
+ 198:	1c be       	out	0x3c, r1	; 60
+			PORTB=(0<<PINB0)|(0<<PINB1);
+ 19a:	18 ba       	out	0x18, r1	; 24
+ 19c:	28 c0       	rjmp	.+80     	; 0x1ee <drive+0x122>
+		}
+		if (level > 0)
+ 19e:	12 16       	cp	r1, r18
+ 1a0:	13 06       	cpc	r1, r19
+ 1a2:	8c f4       	brge	.+34     	; 0x1c6 <drive+0xfa>
+		{
+			OCR0=abs(level);
+ 1a4:	a9 01       	movw	r20, r18
+ 1a6:	33 23       	and	r19, r19
+ 1a8:	24 f4       	brge	.+8      	; 0x1b2 <drive+0xe6>
+ 1aa:	44 27       	eor	r20, r20
+ 1ac:	55 27       	eor	r21, r21
+ 1ae:	42 1b       	sub	r20, r18
+ 1b0:	53 0b       	sbc	r21, r19
+ 1b2:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(Y);
+ 1b4:	ab 01       	movw	r20, r22
+ 1b6:	77 23       	and	r23, r23
+ 1b8:	24 f4       	brge	.+8      	; 0x1c2 <drive+0xf6>
+ 1ba:	44 27       	eor	r20, r20
+ 1bc:	55 27       	eor	r21, r21
+ 1be:	46 1b       	sub	r20, r22
+ 1c0:	57 0b       	sbc	r21, r23
+ 1c2:	43 bd       	out	0x23, r20	; 35
+			PORTB=(0<<PINB0)|(0<<PINB1);
+ 1c4:	18 ba       	out	0x18, r1	; 24
+
+		}
+		if (level < 0)
+ 1c6:	33 23       	and	r19, r19
+ 1c8:	94 f4       	brge	.+36     	; 0x1ee <drive+0x122>
+		{
+			OCR0=abs(level);
+ 1ca:	a9 01       	movw	r20, r18
+ 1cc:	33 23       	and	r19, r19
+ 1ce:	24 f4       	brge	.+8      	; 0x1d8 <drive+0x10c>
+ 1d0:	44 27       	eor	r20, r20
+ 1d2:	55 27       	eor	r21, r21
+ 1d4:	42 1b       	sub	r20, r18
+ 1d6:	53 0b       	sbc	r21, r19
+ 1d8:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X);
+ 1da:	9c 01       	movw	r18, r24
+ 1dc:	99 23       	and	r25, r25
+ 1de:	24 f4       	brge	.+8      	; 0x1e8 <drive+0x11c>
+ 1e0:	22 27       	eor	r18, r18
+ 1e2:	33 27       	eor	r19, r19
+ 1e4:	28 1b       	sub	r18, r24
+ 1e6:	39 0b       	sbc	r19, r25
+ 1e8:	23 bd       	out	0x23, r18	; 35
+			PORTB=(1<<PINB0)|(0<<PINB1);
+ 1ea:	21 e0       	ldi	r18, 0x01	; 1
+ 1ec:	28 bb       	out	0x18, r18	; 24
+		}
+	}
+	
+	
+	if (X >= 0 && Y <= 0) // Fourth quad
+ 1ee:	99 23       	and	r25, r25
+ 1f0:	0c f4       	brge	.+2      	; 0x1f4 <drive+0x128>
+ 1f2:	41 c0       	rjmp	.+130    	; 0x276 <drive+0x1aa>
+ 1f4:	16 16       	cp	r1, r22
+ 1f6:	17 06       	cpc	r1, r23
+ 1f8:	0c f4       	brge	.+2      	; 0x1fc <drive+0x130>
+ 1fa:	9c c0       	rjmp	.+312    	; 0x334 <drive+0x268>
+	{
+		int level = X + Y;
+ 1fc:	9b 01       	movw	r18, r22
+ 1fe:	28 0f       	add	r18, r24
+ 200:	39 1f       	adc	r19, r25
+		if (level == 0)
+ 202:	21 15       	cp	r18, r1
+ 204:	31 05       	cpc	r19, r1
+ 206:	61 f4       	brne	.+24     	; 0x220 <drive+0x154>
+		{
+			OCR0=abs(0);
+ 208:	1c be       	out	0x3c, r1	; 60
+			OCR2=abs(Y);
+ 20a:	9b 01       	movw	r18, r22
+ 20c:	77 23       	and	r23, r23
+ 20e:	24 f4       	brge	.+8      	; 0x218 <drive+0x14c>
+ 210:	22 27       	eor	r18, r18
+ 212:	33 27       	eor	r19, r19
+ 214:	26 1b       	sub	r18, r22
+ 216:	37 0b       	sbc	r19, r23
+ 218:	23 bd       	out	0x23, r18	; 35
+			PORTB=(0<<PINB0)|(1<<PINB1);
+ 21a:	22 e0       	ldi	r18, 0x02	; 2
+ 21c:	28 bb       	out	0x18, r18	; 24
+ 21e:	78 c0       	rjmp	.+240    	; 0x310 <drive+0x244>
+		}
+		if (level > 0)
+ 220:	12 16       	cp	r1, r18
+ 222:	13 06       	cpc	r1, r19
+ 224:	94 f4       	brge	.+36     	; 0x24a <drive+0x17e>
+		{
+			OCR0=abs(X+Y);
+ 226:	a9 01       	movw	r20, r18
+ 228:	33 23       	and	r19, r19
+ 22a:	24 f4       	brge	.+8      	; 0x234 <drive+0x168>
+ 22c:	44 27       	eor	r20, r20
+ 22e:	55 27       	eor	r21, r21
+ 230:	42 1b       	sub	r20, r18
+ 232:	53 0b       	sbc	r21, r19
+ 234:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X);
+ 236:	ac 01       	movw	r20, r24
+ 238:	99 23       	and	r25, r25
+ 23a:	24 f4       	brge	.+8      	; 0x244 <drive+0x178>
+ 23c:	44 27       	eor	r20, r20
+ 23e:	55 27       	eor	r21, r21
+ 240:	48 1b       	sub	r20, r24
+ 242:	59 0b       	sbc	r21, r25
+ 244:	43 bd       	out	0x23, r20	; 35
+			PORTB=(0<<PINB0)|(1<<PINB1);
+ 246:	42 e0       	ldi	r20, 0x02	; 2
+ 248:	48 bb       	out	0x18, r20	; 24
+
+		}
+		if (level < 0)
+ 24a:	33 23       	and	r19, r19
+ 24c:	0c f0       	brlt	.+2      	; 0x250 <drive+0x184>
+ 24e:	60 c0       	rjmp	.+192    	; 0x310 <drive+0x244>
+		{
+			OCR0=abs(X+Y);
+ 250:	a9 01       	movw	r20, r18
+ 252:	33 23       	and	r19, r19
+ 254:	24 f4       	brge	.+8      	; 0x25e <drive+0x192>
+ 256:	44 27       	eor	r20, r20
+ 258:	55 27       	eor	r21, r21
+ 25a:	42 1b       	sub	r20, r18
+ 25c:	53 0b       	sbc	r21, r19
+ 25e:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(Y);
+ 260:	9b 01       	movw	r18, r22
+ 262:	77 23       	and	r23, r23
+ 264:	24 f4       	brge	.+8      	; 0x26e <drive+0x1a2>
+ 266:	22 27       	eor	r18, r18
+ 268:	33 27       	eor	r19, r19
+ 26a:	26 1b       	sub	r18, r22
+ 26c:	37 0b       	sbc	r19, r23
+ 26e:	23 bd       	out	0x23, r18	; 35
+			PORTB=(1<<PINB0)|(1<<PINB1);
+ 270:	23 e0       	ldi	r18, 0x03	; 3
+ 272:	28 bb       	out	0x18, r18	; 24
+ 274:	4d c0       	rjmp	.+154    	; 0x310 <drive+0x244>
+		}
+	}
+	
+	
+	if (X <= 0 && Y <=0) // Third quad
+ 276:	16 16       	cp	r1, r22
+ 278:	17 06       	cpc	r1, r23
+ 27a:	0c f4       	brge	.+2      	; 0x27e <drive+0x1b2>
+ 27c:	5b c0       	rjmp	.+182    	; 0x334 <drive+0x268>
+	{
+		int level = X - Y;
+ 27e:	9c 01       	movw	r18, r24
+ 280:	26 1b       	sub	r18, r22
+ 282:	37 0b       	sbc	r19, r23
+		if (level == 0)
+ 284:	61 f4       	brne	.+24     	; 0x29e <drive+0x1d2>
+		{
+			OCR0=abs(X);
+ 286:	9c 01       	movw	r18, r24
+ 288:	99 23       	and	r25, r25
+ 28a:	24 f4       	brge	.+8      	; 0x294 <drive+0x1c8>
+ 28c:	22 27       	eor	r18, r18
+ 28e:	33 27       	eor	r19, r19
+ 290:	28 1b       	sub	r18, r24
+ 292:	39 0b       	sbc	r19, r25
+ 294:	2c bf       	out	0x3c, r18	; 60
+			OCR2=abs(0);
+ 296:	13 bc       	out	0x23, r1	; 35
+			PORTB=(1<<PINB0)|(0<<PINB1);
+ 298:	81 e0       	ldi	r24, 0x01	; 1
+ 29a:	88 bb       	out	0x18, r24	; 24
+ 29c:	4b c0       	rjmp	.+150    	; 0x334 <drive+0x268>
+		}
+		if (level > 0)
+ 29e:	12 16       	cp	r1, r18
+ 2a0:	13 06       	cpc	r1, r19
+ 2a2:	94 f4       	brge	.+36     	; 0x2c8 <drive+0x1fc>
+		{
+			
+			OCR0=abs(Y);
+ 2a4:	ab 01       	movw	r20, r22
+ 2a6:	77 23       	and	r23, r23
+ 2a8:	24 f4       	brge	.+8      	; 0x2b2 <drive+0x1e6>
+ 2aa:	44 27       	eor	r20, r20
+ 2ac:	55 27       	eor	r21, r21
+ 2ae:	46 1b       	sub	r20, r22
+ 2b0:	57 0b       	sbc	r21, r23
+ 2b2:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X-Y);
+ 2b4:	a9 01       	movw	r20, r18
+ 2b6:	33 23       	and	r19, r19
+ 2b8:	24 f4       	brge	.+8      	; 0x2c2 <drive+0x1f6>
+ 2ba:	44 27       	eor	r20, r20
+ 2bc:	55 27       	eor	r21, r21
+ 2be:	42 1b       	sub	r20, r18
+ 2c0:	53 0b       	sbc	r21, r19
+ 2c2:	43 bd       	out	0x23, r20	; 35
+			PORTB=(1<<PINB0)|(1<<PINB1);
+ 2c4:	43 e0       	ldi	r20, 0x03	; 3
+ 2c6:	48 bb       	out	0x18, r20	; 24
+		}
+		if (level < 0)
+ 2c8:	33 23       	and	r19, r19
+ 2ca:	a4 f5       	brge	.+104    	; 0x334 <drive+0x268>
+		{
+			OCR0=abs(X);
+ 2cc:	ac 01       	movw	r20, r24
+ 2ce:	99 23       	and	r25, r25
+ 2d0:	24 f4       	brge	.+8      	; 0x2da <drive+0x20e>
+ 2d2:	44 27       	eor	r20, r20
+ 2d4:	55 27       	eor	r21, r21
+ 2d6:	48 1b       	sub	r20, r24
+ 2d8:	59 0b       	sbc	r21, r25
+ 2da:	4c bf       	out	0x3c, r20	; 60
+			OCR2=abs(X-Y);
+ 2dc:	c9 01       	movw	r24, r18
+ 2de:	99 23       	and	r25, r25
+ 2e0:	24 f4       	brge	.+8      	; 0x2ea <drive+0x21e>
+ 2e2:	88 27       	eor	r24, r24
+ 2e4:	99 27       	eor	r25, r25
+ 2e6:	82 1b       	sub	r24, r18
+ 2e8:	93 0b       	sbc	r25, r19
+ 2ea:	83 bd       	out	0x23, r24	; 35
+			PORTB=(1<<PINB0)|(0<<PINB1);
+ 2ec:	81 e0       	ldi	r24, 0x01	; 1
+ 2ee:	88 bb       	out	0x18, r24	; 24
+ 2f0:	21 c0       	rjmp	.+66     	; 0x334 <drive+0x268>
+	if(abs(Y)<=30)
+	{
+		Y=0;
+	}
+	
+	if (X >= 0 && Y >= 0)          // First quadrant
+ 2f2:	99 23       	and	r25, r25
+ 2f4:	0c f0       	brlt	.+2      	; 0x2f8 <drive+0x22c>
+ 2f6:	ff ce       	rjmp	.-514    	; 0xf6 <drive+0x2a>
+	{
+		X=0;
+	}
+	if(abs(Y)<=30)
+	{
+		Y=0;
+ 2f8:	60 e0       	ldi	r22, 0x00	; 0
+ 2fa:	70 e0       	ldi	r23, 0x00	; 0
+ 2fc:	3c cf       	rjmp	.-392    	; 0x176 <drive+0xaa>
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	if (X <= 0 && Y >= 0) // Second Quad
+ 2fe:	18 16       	cp	r1, r24
+ 300:	19 06       	cpc	r1, r25
+ 302:	0c f4       	brge	.+2      	; 0x306 <drive+0x23a>
+ 304:	77 cf       	rjmp	.-274    	; 0x1f4 <drive+0x128>
+ 306:	3a cf       	rjmp	.-396    	; 0x17c <drive+0xb0>
+			PORTB=(1<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	
+	if (X >= 0 && Y <= 0) // Fourth quad
+ 308:	99 23       	and	r25, r25
+ 30a:	0c f0       	brlt	.+2      	; 0x30e <drive+0x242>
+ 30c:	77 cf       	rjmp	.-274    	; 0x1fc <drive+0x130>
+ 30e:	b7 cf       	rjmp	.-146    	; 0x27e <drive+0x1b2>
+			PORTB=(1<<PINB0)|(1<<PINB1);
+		}
+	}
+	
+	
+	if (X <= 0 && Y <=0) // Third quad
+ 310:	18 16       	cp	r1, r24
+ 312:	19 06       	cpc	r1, r25
+ 314:	0c f0       	brlt	.+2      	; 0x318 <drive+0x24c>
+ 316:	b3 cf       	rjmp	.-154    	; 0x27e <drive+0x1b2>
+ 318:	0d c0       	rjmp	.+26     	; 0x334 <drive+0x268>
+	
+	if(abs(X)<=30)
+	{
+		X=0;
+	}
+	if(abs(Y)<=30)
+ 31a:	cb 01       	movw	r24, r22
+ 31c:	4e 96       	adiw	r24, 0x1e	; 30
+ 31e:	cd 97       	sbiw	r24, 0x3d	; 61
+ 320:	08 f4       	brcc	.+2      	; 0x324 <drive+0x258>
+ 322:	ec ce       	rjmp	.-552    	; 0xfc <drive+0x30>
+int drive(int X,int Y)
+{
+	
+	if(abs(X)<=30)
+	{
+		X=0;
+ 324:	80 e0       	ldi	r24, 0x00	; 0
+ 326:	90 e0       	ldi	r25, 0x00	; 0
+ 328:	df ce       	rjmp	.-578    	; 0xe8 <drive+0x1c>
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	if (X <= 0 && Y >= 0) // Second Quad
+ 32a:	18 16       	cp	r1, r24
+ 32c:	19 06       	cpc	r1, r25
+ 32e:	0c f4       	brge	.+2      	; 0x332 <drive+0x266>
+ 330:	61 cf       	rjmp	.-318    	; 0x1f4 <drive+0x128>
+ 332:	64 cf       	rjmp	.-312    	; 0x1fc <drive+0x130>
+			PORTB=(1<<PINB0)|(0<<PINB1);
+			
+		}
+	}
+	return 0;
+}
+ 334:	80 e0       	ldi	r24, 0x00	; 0
+ 336:	90 e0       	ldi	r25, 0x00	; 0
+ 338:	08 95       	ret
+
+0000033a <main>:
+	uint8_t joyval2;
+
+int main(void)
+
+{
+	DDRB|= (1<<PINB3);
+ 33a:	bb 9a       	sbi	0x17, 3	; 23
+	DDRD|=(1<<PIND7);
+ 33c:	8f 9a       	sbi	0x11, 7	; 17
+	DDRB|=(1<<PINB0);
+ 33e:	b8 9a       	sbi	0x17, 0	; 23
+	DDRB|=(1<<PINB1);
+ 340:	b9 9a       	sbi	0x17, 1	; 23
+	   TCCR0 |= 1<<WGM00 | 1<<WGM01 | 1<<COM01 | 1<<CS00;
+ 342:	83 b7       	in	r24, 0x33	; 51
+ 344:	89 66       	ori	r24, 0x69	; 105
+ 346:	83 bf       	out	0x33, r24	; 51
+	TCCR2|=1<<WGM20| 1<<WGM21| 1<<COM21| 1<<CS20;
+ 348:	85 b5       	in	r24, 0x25	; 37
+ 34a:	89 66       	ori	r24, 0x69	; 105
+ 34c:	85 bd       	out	0x25, r24	; 37
+
+	
+	/* Replace with your application code */
+	while (1)
+	{
+		ADC_initialise();
+ 34e:	0e 94 3e 00 	call	0x7c	; 0x7c <ADC_initialise>
+		
+		X=(ADC_channel(2));
+ 352:	82 e0       	ldi	r24, 0x02	; 2
+ 354:	90 e0       	ldi	r25, 0x00	; 0
+ 356:	0e 94 43 00 	call	0x86	; 0x86 <ADC_channel>
+ 35a:	90 93 6c 00 	sts	0x006C, r25	; 0x80006c <X+0x1>
+ 35e:	80 93 6b 00 	sts	0x006B, r24	; 0x80006b <X>
+		
+		
+		//_delay_ms(2);
+		
+		ADC_initialise();
+ 362:	0e 94 3e 00 	call	0x7c	; 0x7c <ADC_initialise>
+		 Y=(ADC_channel(1));
+ 366:	81 e0       	ldi	r24, 0x01	; 1
+ 368:	90 e0       	ldi	r25, 0x00	; 0
+ 36a:	0e 94 43 00 	call	0x86	; 0x86 <ADC_channel>
+ 36e:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <Y+0x1>
+ 372:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <Y>
+		 
+		 drive(X,Y);
+ 376:	bc 01       	movw	r22, r24
+ 378:	80 91 6b 00 	lds	r24, 0x006B	; 0x80006b <X>
+ 37c:	90 91 6c 00 	lds	r25, 0x006C	; 0x80006c <X+0x1>
+ 380:	0e 94 66 00 	call	0xcc	; 0xcc <drive>
+ 384:	e4 cf       	rjmp	.-56     	; 0x34e <main+0x14>
+
+00000386 <_exit>:
+ 386:	f8 94       	cli
+
+00000388 <__stop_program>:
+ 388:	ff cf       	rjmp	.-2      	; 0x388 <__stop_program>

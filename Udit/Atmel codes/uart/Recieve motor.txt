@@ -1,0 +1,192 @@
+/*
+ * Recieve Uart motor.c
+ *
+ * Created: 28-01-2019 12:12:25
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <stdlib.h>
+
+unsigned int UBBRval=103;
+
+int joyval;
+
+int X;
+int Y;
+int joy;
+
+int main(void)
+{    
+    Pwm_initialize();
+	Uart_initialize();
+	
+    /* Replace with your application code */
+    while (1) 
+    {   //DDRC|=1<<PINC0;
+		
+		
+		joy=Receive();
+		joyval=abs(joy)-128;
+		
+		if(abs(joyval) <= 30)
+		{
+			joyval=0;
+		}
+		
+		if ((joy & 0b00000001)==0b00000001)
+		{ 
+			
+			
+			X=joyval;
+		}
+		
+		if ((joy & 0b00000001)==0b00000000)
+		{   
+		 
+		    
+			Y=joyval;
+		}
+		
+	drive(X,Y);
+		
+    }
+}
+
+void Uart_initialize(unsigned int UBBRval)
+{
+	UBRRH=(unsigned char) (UBBRval>>8);
+	UBRRL=(unsigned char) (UBBRval);
+	UCSRB=(1<<RXEN);
+	UCSRC=(1<<URSEL)|(1<<USBS)|(1<<UCSZ1)|(1<<UCSZ0);
+	UCSRA=1<<U2X;
+	
+}
+
+
+int Receive(void)
+{ //  PORTC^=(1<<PINC0);
+	while(!(UCSRA & (1<<RXC)));
+	return UDR;
+}
+
+void Pwm_initialize(void)
+{
+	DDRB|= (1<<PINB3);
+	DDRD|=(1<<PIND7);
+	
+	DDRB|=(1<<PINB0);
+	DDRB|=(1<<PINB1);
+	
+	TCCR0|= (1<<WGM00)|(1<<WGM01)|(1<<COM01)|(1<<CS00) ; // PWM setting for pinb3, timer 0
+	TCCR2|= (1<<WGM20)|(1<<WGM21)|(1<<COM21)|(1<<CS20) ; // PWM setting for pind7 time
+}
+
+
+
+int drive(int X,int Y)
+{
+
+	
+	if (X >= 0 && Y >= 0)          // First quadrant
+	{
+		int level = X - Y;
+		if (level == 0)
+		{
+			OCR0=abs(X);
+			OCR2=0;
+			PORTB=(0<<PINB0)|(0<<PINB1);
+			
+		}
+		if (level > 0)
+		{
+			
+			OCR0=abs(X);
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+			
+		}
+		if (level < 0)
+		{
+			OCR0=abs(Y);
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	else if (X <= 0 && Y >= 0) // Second Quad
+	{
+		int level = X + Y;
+		if (level == 0)
+		{
+			OCR2=abs(Y);
+			OCR0=0;
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+		if (level > 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(X);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	
+else if (X >= 0 && Y <= 0) // Fourth quad
+	{
+		int level = X + Y;
+		if (level == 0)
+		{
+			OCR0=abs(0);
+			OCR2=abs(Y);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+		}
+		if (level > 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(X);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(Y);
+			PORTB=(1<<PINB0)|(1<<PINB1);
+		}
+	}
+	
+	
+	else if (X <= 0 && Y <=0) // Third quad
+	{
+		int level = X - Y;
+		if (level == 0)
+		{
+			OCR0=abs(X);
+			OCR2=abs(0);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+		}
+		if (level > 0)
+		{
+			
+			OCR0=abs(Y);
+			OCR2=abs(X-Y);
+			PORTB=(1<<PINB0)|(1<<PINB1);
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X);
+			OCR2=abs(X-Y);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+			
+		}
+	}
+	return 0;
+}

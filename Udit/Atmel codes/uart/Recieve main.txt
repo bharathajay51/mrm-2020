@@ -1,0 +1,51 @@
+/*
+ * Recieve Uart motor.c
+ *
+ * Created: 28-01-2019 12:12:25
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <stdlib.h>
+
+unsigned int UBBRval=103;
+
+int main(void)
+{    
+    Pwm_initialize();
+	Uart_initialize();
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+		OCR2=Receive();
+    }
+}
+
+void Uart_initialize(unsigned int UBBRval)
+{
+	UBRRH=(unsigned char) (UBBRval>>8);
+	UBRRL=(unsigned char) (UBBRval);
+	UCSRB=(1<<RXEN);
+	UCSRC=(1<<URSEL)|(1<<USBS)|(1<<UCSZ1)|(1<<UCSZ0);
+	UCSRA=1<<U2X;
+	
+}
+
+
+int Receive(void)
+{
+	while(!(UCSRA & (1<<RXC)));
+	return UDR;
+}
+
+void Pwm_initialize(void)
+{
+	DDRB|= (1<<PINB3);
+	DDRD|=(1<<PIND7);
+	DDRB|=(1<<PINB0);
+	DDRB|=(1<<PINB1);
+	
+	TCCR0|= (1<<WGM00)| (1<<WGM01)|(1<<COM01)|(1<<CS00) ; // PWM setting for pinb3, timer 0
+	TCCR2|= (1<<WGM20)|(1<<WGM21) | (1<<COM21)| (1<<CS20) ; // PWM setting for pind7 time
+}

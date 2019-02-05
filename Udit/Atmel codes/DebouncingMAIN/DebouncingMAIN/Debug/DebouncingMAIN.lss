@@ -1,0 +1,164 @@
+
+DebouncingMAIN.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000c0  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000114  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000114  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000144  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000028  00000000  00000000  00000180  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000006a7  00000000  00000000  000001a8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000005f4  00000000  00000000  0000084f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000292  00000000  00000000  00000e43  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000034  00000000  00000000  000010d8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    0000036a  00000000  00000000  0000110c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000e2  00000000  00000000  00001476  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000018  00000000  00000000  00001558  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d4 e0       	ldi	r29, 0x04	; 4
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 4a 00 	call	0x94	; 0x94 <main>
+  64:	0c 94 5e 00 	jmp	0xbc	; 0xbc <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <debounce>:
+#define F_CPU 10000000UL 
+#include <avr/io.h>
+#include <util/delay.h>
+int debounce(int last_state)
+{
+	int current_state=((PIND &(1<<PIND7))>>PIND7);
+  6c:	20 b3       	in	r18, 0x10	; 16
+	if(current_state != last_state)
+  6e:	22 1f       	adc	r18, r18
+  70:	22 27       	eor	r18, r18
+  72:	22 1f       	adc	r18, r18
+  74:	30 e0       	ldi	r19, 0x00	; 0
+  76:	28 17       	cp	r18, r24
+  78:	39 07       	cpc	r19, r25
+  7a:	59 f0       	breq	.+22     	; 0x92 <debounce+0x26>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  7c:	83 ed       	ldi	r24, 0xD3	; 211
+  7e:	90 e3       	ldi	r25, 0x30	; 48
+  80:	01 97       	sbiw	r24, 0x01	; 1
+  82:	f1 f7       	brne	.-4      	; 0x80 <debounce+0x14>
+  84:	00 c0       	rjmp	.+0      	; 0x86 <debounce+0x1a>
+  86:	00 00       	nop
+	{
+		_delay_ms(5);
+		current_state=(PIND &(1<<PIND7))>>PIND7;
+  88:	80 b3       	in	r24, 0x10	; 16
+  8a:	88 1f       	adc	r24, r24
+  8c:	88 27       	eor	r24, r24
+  8e:	88 1f       	adc	r24, r24
+  90:	90 e0       	ldi	r25, 0x00	; 0
+	}
+	return(current_state);
+}
+  92:	08 95       	ret
+
+00000094 <main>:
+
+int main(void)
+{  
+   DDRB |=1<<PINB3;
+  94:	bb 9a       	sbi	0x17, 3	; 23
+   DDRD &= ~(1<<PIND7);
+  96:	8f 98       	cbi	0x11, 7	; 17
+   PORTB|=(1<<PINB3);
+  98:	c3 9a       	sbi	0x18, 3	; 24
+   PORTD|= (1<<PIND7);
+  9a:	97 9a       	sbi	0x12, 7	; 18
+   int last_state= 1;
+  9c:	c1 e0       	ldi	r28, 0x01	; 1
+  9e:	d0 e0       	ldi	r29, 0x00	; 0
+    while (1) 
+    {
+		but_state=debounce(last_state);
+		if(but_state==0 && last_state==1)
+		{
+			PORTB^=(1<< PINB3);
+  a0:	18 e0       	ldi	r17, 0x08	; 8
+  a2:	01 c0       	rjmp	.+2      	; 0xa6 <main+0x12>
+	}
+	return(current_state);
+}
+
+int main(void)
+{  
+  a4:	ec 01       	movw	r28, r24
+   int last_state= 1;
+   int but_state;
+    /* Replace with your application code */
+    while (1) 
+    {
+		but_state=debounce(last_state);
+  a6:	ce 01       	movw	r24, r28
+  a8:	0e 94 36 00 	call	0x6c	; 0x6c <debounce>
+		if(but_state==0 && last_state==1)
+  ac:	00 97       	sbiw	r24, 0x00	; 0
+  ae:	d1 f7       	brne	.-12     	; 0xa4 <main+0x10>
+  b0:	21 97       	sbiw	r28, 0x01	; 1
+  b2:	c1 f7       	brne	.-16     	; 0xa4 <main+0x10>
+		{
+			PORTB^=(1<< PINB3);
+  b4:	28 b3       	in	r18, 0x18	; 24
+  b6:	21 27       	eor	r18, r17
+  b8:	28 bb       	out	0x18, r18	; 24
+  ba:	f4 cf       	rjmp	.-24     	; 0xa4 <main+0x10>
+
+000000bc <_exit>:
+  bc:	f8 94       	cli
+
+000000be <__stop_program>:
+  be:	ff cf       	rjmp	.-2      	; 0xbe <__stop_program>

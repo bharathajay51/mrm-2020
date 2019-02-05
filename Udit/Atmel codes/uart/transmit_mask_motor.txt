@@ -1,0 +1,144 @@
+
+/*
+ * Uart transmit (motor).c
+
+}
+
+ *
+ * Created: 28-01-2019 11:48:51
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdlib.h>
+
+
+int hv;
+int joyval;
+uint16_t Tenbit;
+int lv;
+int joyval1;
+int joyval2;
+uint8_t Tenbit1;
+uint8_t Tenbit2;
+uint8_t Tenbit3;
+uint8_t Tenbit4; 
+
+char data;
+unsigned int UBBRval = 25;
+int main(void)
+{   
+	DDRC|=1<<PINC0;
+	sei();
+	ADC_begin();
+	ADC_initialise();
+	Uart_initialize(UBBRval);
+	ADC_start();
+	
+    /* Replace with your application code */
+    while (1) 
+    {    
+	     
+    }
+	
+}
+
+void Uart_initialize(unsigned int UBBRval)
+{
+	UBRRH=(unsigned char) (UBBRval>>8);
+	UBRRL=(unsigned char) (UBBRval);
+	UCSRB=(1<<TXEN);
+	UCSRC=(1<<URSEL)|(1<<USBS)|(1<<UCSZ1)|(1<<UCSZ0);
+	//UCSRA=1<<U2X;
+	
+}
+
+void Transmit( char data)
+{ //  PORTC^=(1<<PINC0);
+	while(!(UCSRA & (1<<UDRE)));
+	UDR=data;
+}
+
+void ADC_begin()
+{
+	ADMUX |= (1<<REFS0)|(1<<ADLAR); // taking input voltage as reference & doing right shift to the result
+	ADCSRA |= 1<<ADPS2; // prescaller set to 16
+}
+
+void ADC_initialise()
+{
+	ADCSRA |= 1<<ADEN;
+	ADCSRA |= 1<<ADIE;
+	ADCSRA|=1<<ADATE;
+}
+void ADC_start()
+{
+	ADCSRA|=1<<ADSC;
+}
+
+
+/*ISR(ADC_vect)
+{
+	hv=ADCH;
+	lv=ADCL;
+	Tenbit=(ADCH<<2|lv>>6);
+	
+	
+		   Tenbit2=(Tenbit>>5);
+		    Tenbit2|=0b11000000;
+			
+		    Transmit(Tenbit2);
+			
+			Tenbit1 =Tenbit & 0b00011111;
+			
+		    Tenbit1|=0b10000000;
+			Transmit(Tenbit1);
+	
+		
+			
+	
+	ADCSRA|=1<<ADSC;
+	
+}*/
+
+
+ISR(ADC_vect)
+{
+	hv=ADCH;
+	lv=ADCL;
+	Tenbit=(ADCH<<2|lv>>6);
+	
+	switch(ADMUX)
+	{
+		case 0x60:
+		{
+		Tenbit2=(Tenbit>>5);
+		Tenbit2|=0b11000000;
+		Transmit(Tenbit2);
+		
+		Tenbit1 =Tenbit & 0b00011111;
+		Tenbit1|=0b10000000;
+		Transmit(Tenbit1);
+			ADMUX=0x61;
+			break;
+		}
+		
+		case 0x61:
+		{
+			
+			Tenbit4=(Tenbit>>5);
+			Tenbit4|=0b00000000;
+			Transmit(Tenbit4);
+			
+			Tenbit3 =Tenbit & 0b00011111;
+			Tenbit3|=0b01000000;
+			Transmit(Tenbit3);
+			
+			ADMUX=0x60;
+			break;
+		}
+		
+	}
+	ADCSRA|=1<<ADSC;
+}
