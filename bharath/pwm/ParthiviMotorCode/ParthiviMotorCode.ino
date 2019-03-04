@@ -22,12 +22,12 @@ int octant(int p, int q)
     if(p-q>0) c=3;
     else c=4;
   }
-  else if(p<=0 && q>0)
+  else if(p<=0 && q>=0)
   {
     if(p+q>0) c=6;
     else c=5;
   }
-  else if(p>=0 && q>0)
+  else if(p>=0 && q>=0)
   {
     if(p-q>0) c=8;
     else c=7;
@@ -54,12 +54,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+/*
   x=analogRead(A0);
   y=analogRead(A1);
   Serial.print(x);
   Serial.println(y);
-/*
+*/
   x = (analogRead(A0))-512; //x-axis = A0
   y = (analogRead(A1))-512; //y-axis = A1
 
@@ -78,9 +78,9 @@ void loop() {
   
   rpwm=map(a,0,512,0,255);
   lpwm=map(b,0,512,0,255);
-
+  
   Serial.print("Lpwm=");
   Serial.print(lpwm);
   Serial.print("\t Rpwm=");
-  Serial.println(rpwm);*/
+  Serial.println(rpwm);
 }
