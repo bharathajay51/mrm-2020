@@ -1,0 +1,114 @@
+/*
+ * Uart trasmit Motor.c
+ *
+ * Created: 27-01-2019 16:36:06
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdlib.h>
+#include <util/delay.h>
+
+uint8_t UBBRval=51;
+
+int bitval;
+int joyval;
+int Tenbit;
+int lv;
+
+
+int main(void)
+{   
+	Uart_initialize(UBBRval);
+	ADC_begin();
+    ADC_initialise();
+    /* Replace with your application code */
+    while (1) 
+    {
+    }
+}
+
+
+
+void ADC_begin()
+{
+	ADMUX |= (1<<REFS0)|(1<<ADLAR); // taking input voltage as reference & doing right shift to the result
+	ADCSRA |= 1<<ADPS2; // prescaller set to 16
+	sei();
+}
+
+void ADC_initialise()
+{
+	ADCSRA |= 1<<ADEN;
+	ADCSRA |= 1<<ADIE;
+	ADCSRA|=1<<ADATE;
+
+	ADCSRA |= 1<<ADSC;
+}
+
+ISR(ADC_vect)
+{
+	bitval=ADCH;
+	lv=ADCL;
+	Tenbit=(ADCH<<6|lv>>2);
+	joyval=(Tenbit/4-128);
+	if(abs(joyval)<=25)
+	{
+		joyval=0;
+	}
+
+   
+	switch(ADMUX)
+	{
+		case 0x60:
+		{
+			joyval1=joyval;
+                        joyval1|=0b00000001;
+			ADMUX=0x61;
+                        Transmit(joyval1);
+			break;
+		}
+		
+		case 0x61:
+		{
+			joyval2=joyval;
+                        joyval2 &=0b11111110;
+		        ADMUX=0x60;
+                        Transmit(joyval2);
+			break;
+		}
+		
+	}
+	
+	ADCSRA|=1<<ADSC;
+	
+}
+
+void Uart_initialize(uint8_t UBBRval)         
+{ //**********************************For initializing frame of UART******************************************************** 
+	
+	UCSRC|=(1<<URSEL);                                          // As UCSRC and UBRRH have same location in microcontroller, therefore URSEL needs to be set hing when writing in UCSRC.
+	//UCSRC &=~(1<<UMSEL);                                       // Selecting Asynchronous mode (Auto matically set to ASynchronous);
+	UBRRL=UBBRval;
+	UCSRA|=(1<<U2X);                                            // Setting baud rate as 9600
+	UCSRC|=(1<<UCSZ1)|(1<<UCSZ0);                   // 8-bit data length set.
+	//UCSRC|=(1<<UPM1);                                          // Even parity enabelled.
+	UCSRC|=(1<<USBS);                                          // 2-bit stop.
+
+//******************************************* initializing Transmitter and Reciever*******************************************
+
+    UCSRB|=(1<<RXEN)|(1<<TXEN);
+
+}
+
+void Transmit( int stuff)
+{  
+	 PORTC|=(1<<PINC0);
+	while(!(UCSRA & (1<<UDRE)));
+	// AS data is 8 bit we don't need to TX8 in UCSRB to 1.
+	UDR=stuff;
+	_delay_ms(100);
+    PORTC &=~(1<<PINC0);
+	
+}

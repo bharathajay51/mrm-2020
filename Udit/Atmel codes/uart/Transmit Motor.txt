@@ -1,0 +1,118 @@
+
+/*
+ * Uart transmit (motor).c
+
+}
+
+ *
+ * Created: 28-01-2019 11:48:51
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdlib.h>
+
+
+int bitval;
+int joyval;
+int Tenbit;
+int lv;
+int joyval1;
+int joyval2;
+
+
+
+char data;
+unsigned int UBBRval = 103;
+int main(void)
+{   
+	DDRC|=1<<PINC0;
+	sei();
+	ADC_begin();
+	ADC_initialise();
+	Uart_initialize(UBBRval);
+	ADC_start();
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+		
+	
+    }
+	
+}
+
+void Uart_initialize(unsigned int UBBRval)
+{
+	UBRRH=(unsigned char) (UBBRval>>8);
+	UBRRL=(unsigned char) (UBBRval);
+	UCSRB=(1<<TXEN);
+	UCSRC=(1<<URSEL)|(1<<USBS)|(1<<UCSZ1)|(1<<UCSZ0);
+	UCSRA=1<<U2X;
+	
+}
+
+void Transmit( char data)
+{ //  PORTC^=(1<<PINC0);
+	while(!(UCSRA & (1<<UDRE)));
+	UDR=data;
+}
+
+void ADC_begin()
+{
+	ADMUX |= (1<<REFS0)|(1<<ADLAR); // taking input voltage as reference & doing right shift to the result
+	ADCSRA |= 1<<ADPS2; // prescaller set to 16
+}
+
+void ADC_initialise()
+{
+	ADCSRA |= 1<<ADEN;
+	ADCSRA |= 1<<ADIE;
+	ADCSRA|=1<<ADATE;
+}
+void ADC_start()
+{
+	ADCSRA|=1<<ADSC;
+}
+
+
+ISR(ADC_vect)
+{
+	bitval=ADCH;
+	lv=ADCL;
+	Tenbit=(ADCH<<2|lv>>6);
+	
+	if(Tenbit>=1023)
+	{
+		Tenbit=1023;
+	}
+	
+	joyval=Tenbit/4;
+	
+	
+	switch(ADMUX)
+	{
+		case 0x60:
+		{
+			joyval1=joyval;
+			joyval1|=0b00000001;
+			ADMUX=0x61;
+			Transmit(joyval1);
+			break;
+		}
+		
+		case 0x61:
+		{
+			joyval2=joyval;
+			joyval2 &=0b11111110;
+			ADMUX=0x60;
+			Transmit(joyval2);
+			break;
+		}
+		
+	}
+	
+	ADCSRA|=1<<ADSC;
+	
+}

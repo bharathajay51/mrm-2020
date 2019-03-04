@@ -1,0 +1,205 @@
+/*
+ * Uart_Single motor rec.c
+ *
+ * Created: 26-01-2019 16:29:32
+ * Author : TIDU
+ */ 
+
+#include <avr/io.h>
+#include <stdlib.h>
+#include <avr/interrupt.h>
+
+
+int bitval;
+int joyval;
+int Tenbit;
+int lv;
+int hv;
+int UBBRval=51;
+int X;
+int Y;
+int flag=0;
+
+int main(void)
+{
+	DDRC|=1<<PINC0;
+	PORTC&=~(1<<PINC0);
+	Uart_initialize(UBBRval);
+	Pwm_initialise();
+	
+    /* Replace with your application code */
+    while (1) 
+    {          
+               joyval=Recieve();
+                if ((joyval & 0b00000001)==0b00000001)
+                    {
+                          X=joyval;
+                    }
+    
+	 	else if ((joyval & 0b00000001)==0b00000000)
+                    {
+                          Y=joyval;
+                    }	
+		
+	   drive(X,Y);
+    }
+}
+
+
+
+void Uart_initialize(int UBBRval)         
+{ //**********************************For initializing frame of UART******************************************************** 
+	
+	UCSRC|=(1<<URSEL);                                          // As UCSRC and UBRRH have same location in microcontroller, therefore URSEL needs to be set hing when writing in UCSRC.
+	//UCSRC &=~(1<<UMSEL);                                       // Selecting Asynchronous mode (Auto matically set to ASynchronous);
+	UBRRL=UBBRval;
+	UCSRA|=(1<<U2X);                                         // double speed operation.
+	UCSRC|=(1<<UCSZ1)|(1<<UCSZ0);                   // 8-bit data length set.
+	UCSRC|=(1<<UPM1);                                          // Even parity enabelled.
+	UCSRC|=(1<<USBS);                                          // 2-bit stop.
+
+//******************************************* initializing Transmitter and Reciever*******************************************
+
+    UCSRB|=(1<<RXEN)|(1<<TXEN);
+
+}
+
+
+int Recieve(void)
+{   PORTC^=(1<<PINC0);
+	while (! (UCSRA & (1 << RXC)) );  
+    return UDR;
+}
+
+void Pwm_initialise(void)
+{
+	DDRB|= (1<<PINB3);
+	DDRD|=(1<<PIND7);
+	DDRB|=(1<<PINB0);
+	DDRB|=(1<<PINB1);
+	
+	TCCR0|= (1<<WGM00)| (1<<WGM01)|(1<<COM01)|(1<<CS00) ; 
+	TCCR2|= (1<<WGM20)|(1<<WGM21) | (1<<COM21)| (1<<CS20) ;
+}
+
+
+
+
+
+
+
+
+int drive(int X,int Y)
+{
+	
+	if(abs(X)<=30)
+	{
+		X=0;
+	}
+	if(abs(Y)<=30)
+	{
+		Y=0;
+	}
+	
+	if (X >= 0 && Y >= 0)          // First quadrant
+	{
+		int level = X - Y;
+		if (level == 0)
+		{
+			OCR0=abs(X);
+			OCR2=0;
+			PORTB=(0<<PINB0)|(0<<PINB1);
+			
+		}
+		if (level > 0)
+		{
+			
+			OCR0=abs(X);
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+			
+		}
+		if (level < 0)
+		{
+			OCR0=abs(Y);
+			OCR2=abs(X-Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	if (X <= 0 && Y >= 0) // Second Quad
+	{
+		int level = X + Y;
+		if (level == 0)
+		{
+			OCR2=abs(Y);
+			OCR0=0;
+			PORTB=(0<<PINB0)|(0<<PINB1);
+		}
+		if (level > 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(Y);
+			PORTB=(0<<PINB0)|(0<<PINB1);
+
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(X);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+		}
+	}
+	
+	
+	if (X >= 0 && Y <= 0) // Fourth quad
+	{
+		int level = X + Y;
+		if (level == 0)
+		{
+			OCR0=abs(0);
+			OCR2=abs(Y);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+		}
+		if (level > 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(X);
+			PORTB=(0<<PINB0)|(1<<PINB1);
+
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X+Y);
+			OCR2=abs(Y);
+			PORTB=(1<<PINB0)|(1<<PINB1);
+		}
+	}
+	
+	
+	if (X <= 0 && Y <=0) // Third quad
+	{
+		int level = X - Y;
+		if (level == 0)
+		{
+			OCR0=abs(X);
+			OCR2=abs(0);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+		}
+		if (level > 0)
+		{
+			
+			OCR0=abs(Y);
+			OCR2=abs(X-Y);
+			PORTB=(1<<PINB0)|(1<<PINB1);
+		}
+		if (level < 0)
+		{
+			OCR0=abs(X);
+			OCR2=abs(X-Y);
+			PORTB=(1<<PINB0)|(0<<PINB1);
+			
+		}
+	}
+	return 0;
+}
